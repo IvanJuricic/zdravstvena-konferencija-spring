@@ -1,12 +1,12 @@
-package com.zdravstvenakonf.app;
+package com.zdrkonf.app.konf;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class ZdrkonfApplication {
-	public static void main(String[] args) {
 
+	public static void main(String[] args) {
 		SpringApplication.run(ZdrkonfApplication.class, args);
 	}
 
