@@ -1,28 +1,23 @@
 package com.zdrkonf.app.konf.models;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
+import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Document
 public class User {
-
-    @JsonSerialize(using = ToStringSerializer.class)
-    private ObjectId id;
-    private String name;
-    private String email;
-
-    private Boolean isAuthorized;
-    private Date date = new Date();
-
-    public User(String name, String email) {
-        this.name = name;
-        this.email = email;
-    }
+    @Id
+    String id;
+    String name;
+    String email;
+    boolean isAuthorized;
+    String section;
+    //List<String> papers;
 
     public String getName() {
         return name;
@@ -31,4 +26,32 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
+    }
+
+    public User(String name, String email, String section){
+        this.name = name;
+        this.email = email;
+        this.section = section;
+
+    }
+
+    public String toString(){
+        return "User Name: " + name + "Email: " + email + "Section: " + section;
+    }
+
 }
