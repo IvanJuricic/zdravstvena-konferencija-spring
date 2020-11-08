@@ -4,8 +4,8 @@ import com.zdrkonf.app.konf.models.User;
 import com.zdrkonf.app.konf.repositories.UserRepository;
 import com.zdrkonf.app.konf.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -17,13 +17,13 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping("/create")
-    public String create(@RequestParam String name, @RequestParam String email, @RequestParam String section){
+    public String create(@RequestBody String name, @RequestBody String email, @RequestBody String section){
         User user = userService.create(name, email, section);
         return user.toString();
     }
 
     @RequestMapping("/get")
-    public User getUser(@RequestParam String email){
+    public User getUser(@RequestBody String email){
         return userService.getByEmail(email);
     }
 
@@ -33,13 +33,13 @@ public class UserController {
     }
 
     @RequestMapping("/update")
-    public String update(@RequestParam String name, @RequestParam String email, @RequestParam String section){
+    public String update(@RequestBody String name, @RequestBody String email, @RequestBody String section){
         User user = userService.update(name, email, section);
         return user.toString();
     }
 
     @RequestMapping("/delete")
-    public String delete(@RequestParam String email){
+    public String delete(@RequestBody String email){
         userService.delete(email);
         return "Deleted " + email;
     }

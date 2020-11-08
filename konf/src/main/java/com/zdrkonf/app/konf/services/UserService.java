@@ -1,17 +1,32 @@
 package com.zdrkonf.app.konf.services;
 
+
 import com.zdrkonf.app.konf.models.User;
 import com.zdrkonf.app.konf.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.User;
+
 
 import java.util.List;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
+
+    @Override
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        return new org.springframework.security.core.userdetails.User("Admin", "Admin123", )
+    }
 
     @Autowired
     private UserRepository userRepository;
+
+    //@Autowired
+    //private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // Create operation
     public User create(String name, String email, String section){
