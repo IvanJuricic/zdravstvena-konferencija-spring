@@ -8,29 +8,70 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Document
+@Document(collection = "users")
 public class User {
-    
     @Id
-    String id;
-    String name;
-    String email;
-    boolean isAuthorized;
-    String section;
+    private String id;
 
-    //@DBRef
-    //private Set<Role> roles;
+    @NotBlank
+    @Size(max = 20)
+    private String username;
+
+    @NotBlank
+    @Size(max = 50)
+    @Email
+    private String email;
+
+    @NotBlank
+    private String section;
+
+    @DBRef
+    private Set<Role> roles = new HashSet<>();
+
+    private String password;
+
+    private boolean isAuthorized;
+
     //List<String> papers;
 
-    public String getName() {
-        return name;
+    /* Getters and Setters */
+    public String getPassword() {
+        return password;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -49,15 +90,15 @@ public class User {
         this.section = section;
     }
 
-    public User(String name, String email, String section){
-        this.name = name;
+    public User(String username, String email, String section, String password){
+        this.username = username;
         this.email = email;
         this.section = section;
-
+        this.password = password;
     }
 
     public String toString(){
-        return "User Name: " + name + " Email: " + email + " Section: " + section;
+        return "User Name: " + username + " Email: " + email + " Section: " + section;
     }
 
 }

@@ -1,8 +1,6 @@
 package com.zdrkonf.app.konf.controllers;
 
 import com.zdrkonf.app.konf.models.User;
-import com.zdrkonf.app.konf.repositories.UserRepository;
-import com.zdrkonf.app.konf.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +10,7 @@ import java.util.List;
 
 @RestController
 public class UserController {
-
+/*
     @Autowired
     private UserService userService;
 
@@ -48,5 +46,5 @@ public class UserController {
     public String deleteAll(){
         userService.deleteAll();
         return "Deleted all records";
-    }
+    }*/
 }
