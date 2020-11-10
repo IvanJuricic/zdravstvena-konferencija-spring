@@ -29,7 +29,7 @@ public class User {
     @Email
     private String email;
 
-    @NotBlank
+
     private String section;
 
     @DBRef
@@ -90,10 +90,10 @@ public class User {
         this.section = section;
     }
 
-    public User(String username, String email, String section, String password){
+    public User(String username, String email, String password){
         this.username = username;
         this.email = email;
-        this.section = section;
+        //this.section = section;
         this.password = password;
     }
 
