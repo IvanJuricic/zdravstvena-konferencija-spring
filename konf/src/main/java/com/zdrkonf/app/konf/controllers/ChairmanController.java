@@ -34,17 +34,9 @@ public class ChairmanController {
 
     @GetMapping("/getPapers")
     @PreAuthorize("hasRole('CHAIRMAN')")
-    public List<String> getPapersLength(){
+    public List<Paper> getPapersLength(){
 
-        List<Paper> papers = paperRepository.findAll();
-
-        List<String> paperURLs = new ArrayList<>();
-
-        papers.forEach(paper -> {
-            paperURLs.add(paper.getUrl());
-        });
-
-        return paperURLs;
+        return paperRepository.findAll();
     }
 
 

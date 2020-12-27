@@ -31,12 +31,12 @@ export default class BoardUser extends Component {
   }
 
   downloadPapers(e) {
-    this.state.papers.map((paperURL) => {
+    this.state.papers.map((paper) => {
       var oReq = new XMLHttpRequest();
       // The Endpoint of your server
 
       // Configure XMLHttpRequest
-      oReq.open("GET", paperURL, true);
+      oReq.open("GET", paper.url, true);
 
       // Important to use the blob response type
       oReq.responseType = "blob";
@@ -51,7 +51,7 @@ export default class BoardUser extends Component {
         });
 
         // Generate file download directly in the browser !
-        FileSaver.saveAs(file, "ivan.pdf");
+        FileSaver.saveAs(file, paper.title);
       };
 
       oReq.send();
@@ -104,9 +104,7 @@ export default class BoardUser extends Component {
           <br />
           <br />
 
-          <label>
-            Ukupan broj predanih radova: {this.state.papers.length}{" "}
-          </label>
+          <label>Ukupan broj predanih radova: {this.state.papers.length}</label>
           <button
             className="btn btn-primary btn-block"
             onClick={this.downloadPapers}
