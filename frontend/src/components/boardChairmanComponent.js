@@ -14,7 +14,7 @@ export default function BoardUser(props) {
 
   const handleSave = (e) => {
     const file = e.target.files[0];
-    const user = JSON.parse(localStorage.getItem("user"));
+
     const fileName = file.name;
     const storageRef = storage.ref("papers");
     const fileRef = storageRef.child(fileName);
@@ -23,7 +23,7 @@ export default function BoardUser(props) {
       /* TODO: add email verification after */
       fileRef.getDownloadURL().then((res) => {
         PaperService.uploadPaper(res, fileName).then(() =>
-          PaperService.sendConfEmail(user.email).then((res) => console.log(res))
+          console.log("jeeeeeees")
         );
       });
     });

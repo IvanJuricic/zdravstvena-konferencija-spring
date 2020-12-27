@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 
 import UserService from "../services/userService";
+import ConferenceDetails from "../components/ConferenceDetails";
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      content: "",
+      confDetails: [],
     };
   }
 
@@ -15,7 +16,7 @@ export default class Home extends Component {
     UserService.getPublicContent().then(
       (response) => {
         this.setState({
-          content: response.data,
+          confDetails: response.data,
         });
       },
       (error) => {
@@ -32,9 +33,14 @@ export default class Home extends Component {
   render() {
     return (
       <div className="container">
-        <header className="jumbotron">
-          <h3>{this.state.content}</h3>
-        </header>
+        <header className="jumbotron"></header>
+        {this.state.confDetails.map((item) => (
+          <ConferenceDetails
+            key={item.id}
+            title={item.title}
+            description={item.description}
+          />
+        ))}
       </div>
     );
   }

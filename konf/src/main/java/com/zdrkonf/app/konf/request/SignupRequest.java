@@ -21,7 +21,7 @@ public class SignupRequest {
     @NotBlank
     private String password;
 
-    @NotBlank
+
     private String section;
 
     public String getPassword() {

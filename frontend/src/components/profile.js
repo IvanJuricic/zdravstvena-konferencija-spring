@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 class Profile extends Component {
   render() {
     const { user: currentUser } = this.props;
-
+    console.log("Hello ====> ", currentUser.roles);
     if (!currentUser) {
       return <Redirect to="/login" />;
     }
