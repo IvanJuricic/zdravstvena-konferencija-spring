@@ -20,7 +20,6 @@ export default function BoardUser(props) {
     const fileRef = storageRef.child(fileName);
 
     fileRef.put(file).then(() => {
-      /* TODO: add email verification after */
       fileRef.getDownloadURL().then((res) => {
         PaperService.uploadPaper(res, fileName).then(() =>
           PaperService.sendConfEmail(user.email).then((res) => console.log(res))

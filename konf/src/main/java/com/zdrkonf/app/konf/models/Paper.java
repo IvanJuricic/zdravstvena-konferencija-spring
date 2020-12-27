@@ -17,9 +17,9 @@ public class Paper {
 
     //private List<String> comments;
 
-    public Paper(String title, String url) {
-        this.paperName = title;
-        this.paperURL = url;
+    public Paper(String paperName, String paperURL) {
+        this.paperName = paperName;
+        this.paperURL = paperURL;
     }
 
     public String getId() {
@@ -34,15 +34,15 @@ public class Paper {
         return paperName;
     }
 
-    public void setTitle(String title) {
-        this.paperName = title;
+    public void setTitle(String paperName) {
+        this.paperName = paperName;
     }
 
     public String getUrl() {
         return paperURL;
     }
 
-    public void setUrl(String url) {
-        this.paperURL = url;
+    public void setUrl(String paperURL) {
+        this.paperURL = paperURL;
     }
 }

@@ -1,63 +1,120 @@
-import React, { useState, useEffect } from "react";
+import React, { Component } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
+import Textarea from "react-validation/build/textarea";
+import Select from "react-validation/build/select";
 
-import UserService from "../services/userService";
-import PaperService from "../services/paperService";
+import FileSaver from "file-saver";
 
 import { storage } from "../firebase";
-import button from "react-validation/build/button";
 
-export default function BoardUser(props) {
-  const [file, setFile] = useState();
-  const [content, setContent] = useState("");
+import AdminService from "../services/adminService";
+import ChairmanService from "../services/chairmanService";
+import ConferenceService from "../services/conferenceService";
 
-  const handleSave = (e) => {
-    const file = e.target.files[0];
+export default class BoardUser extends Component {
+  constructor(props) {
+    super(props);
 
-    const fileName = file.name;
-    const storageRef = storage.ref("papers");
-    const fileRef = storageRef.child(fileName);
+    this.state = {
+      title: "",
+      description: "",
+      search: "",
+      selectedUser: "",
+      users: [],
+      papers: 0,
+    };
 
-    fileRef.put(file).then(() => {
-      /* TODO: add email verification after */
-      fileRef.getDownloadURL().then((res) => {
-        PaperService.uploadPaper(res, fileName).then(() =>
-          console.log("jeeeeeees")
-        );
-      });
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.downloadPapers = this.downloadPapers.bind(this);
+  }
+
+  downloadPapers(e) {
+    this.state.papers.map((paperURL) => {
+      var oReq = new XMLHttpRequest();
+      // The Endpoint of your server
+
+      // Configure XMLHttpRequest
+      oReq.open("GET", paperURL, true);
+
+      // Important to use the blob response type
+      oReq.responseType = "blob";
+
+      // When the file request finishes
+      // Is up to you, the configuration for error events etc.
+      oReq.onload = function () {
+        // Once the file is downloaded, open a new window with the PDF
+        // Remember to allow the POP-UPS in your browser
+        var file = new Blob([oReq.response], {
+          type: "application/pdf",
+        });
+
+        // Generate file download directly in the browser !
+        FileSaver.saveAs(file, "ivan.pdf");
+      };
+
+      oReq.send();
     });
-  };
+  }
 
-  useEffect(() => {
-    UserService.getUserBoard().then(
-      (response) => {
-        setContent(response.data);
-      },
-      (error) => {
-        setContent("Greska!");
-      }
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+    const data = {
+      title: this.state.title,
+      description: this.state.description,
+    };
+
+    try {
+      ConferenceService.submitConfDetails(data).then(() => e.target.reset());
+    } catch (err) {
+      console.log("Greska pri slanju");
+    }
+  }
+
+  componentDidMount() {
+    AdminService.getAllUsers()
+      .then((response) => {
+        this.setState({
+          users: response.data,
+        });
+      })
+      .then(() => {
+        ChairmanService.getPapers().then((res) => {
+          this.setState({
+            papers: res.data,
+          });
+        });
+      });
+  }
+
+  render() {
+    return (
+      <div className="container">
+        <header className="jumbotron">
+          <label>Lista korisnika:</label>
+          {this.state.users.map((user) => (
+            <li key={user.id}>{user.username}</li>
+          ))}
+
+          <br />
+          <br />
+
+          <label>
+            Ukupan broj predanih radova: {this.state.papers.length}{" "}
+          </label>
+          <button
+            className="btn btn-primary btn-block"
+            onClick={this.downloadPapers}
+          >
+            Preuzmi sve radove
+          </button>
+        </header>
+      </div>
     );
-  }, []);
-
-  return (
-    <div className="container">
-      <header className="jumbotron">
-        <h3>{content}</h3>
-      </header>
-
-      <label>Objavite svoj rad:</label>
-      <Form>
-        <label>
-          Privitak
-          <Input
-            type="file"
-            className="form-control"
-            name="fileName"
-            onChange={handleSave}
-          />
-        </label>
-      </Form>
-    </div>
-  );
+  }
 }

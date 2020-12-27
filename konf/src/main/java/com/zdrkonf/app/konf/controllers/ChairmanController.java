@@ -1,11 +1,9 @@
 package com.zdrkonf.app.konf.controllers;
 
 
-import com.zdrkonf.app.konf.models.Conference;
-import com.zdrkonf.app.konf.models.Role;
-import com.zdrkonf.app.konf.models.RoleEnum;
-import com.zdrkonf.app.konf.models.User;
+import com.zdrkonf.app.konf.models.*;
 import com.zdrkonf.app.konf.repositories.ConferenceRepository;
+import com.zdrkonf.app.konf.repositories.PaperRepository;
 import com.zdrkonf.app.konf.repositories.RoleRepository;
 import com.zdrkonf.app.konf.repositories.UserRepository;
 import com.zdrkonf.app.konf.request.ConferenceDetailsRequest;
@@ -18,18 +16,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/admin")
-public class AdminController {
-
-    @Autowired
-    ConferenceRepository conferenceRepository;
+@RequestMapping("/api/chairman")
+public class ChairmanController {
 
     @Autowired
     UserRepository userRepository;
@@ -37,23 +29,24 @@ public class AdminController {
     @Autowired
     RoleRepository roleRepository;
 
-    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+    @Autowired
+    PaperRepository paperRepository;
 
-    @PostMapping("/conf")
-    @PreAuthorize("hasRole('ADMIN')")
-    public void addConferenceDetails(@RequestBody ConferenceDetailsRequest conferenceDetailsRequest){
+    @GetMapping("/getPapers")
+    @PreAuthorize("hasRole('CHAIRMAN')")
+    public List<String> getPapersLength(){
 
-        Conference newConference = new Conference(conferenceDetailsRequest.getTitle(),
-                conferenceDetailsRequest.getDescription());
+        List<Paper> papers = paperRepository.findAll();
 
-        conferenceRepository.save(newConference);
+        List<String> paperURLs = new ArrayList<>();
+
+        papers.forEach(paper -> {
+            paperURLs.add(paper.getUrl());
+        });
+
+        return paperURLs;
     }
 
-    @GetMapping("/getAll")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('CHAIRMAN')")
-    public List<User> getUsers(){
-        return userRepository.findAll();
-    }
 
     @PostMapping("/setRole")
     @PreAuthorize("hasRole('ADMIN')")

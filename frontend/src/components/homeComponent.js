@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import UserService from "../services/userService";
-import ConferenceDetails from "../components/ConferenceDetails";
+import ConferenceDetails from "../components/conferenceDetails";
 
 export default class Home extends Component {
   constructor(props) {

@@ -3,6 +3,8 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
 class Profile extends Component {
+  componentDidMount() {}
+
   render() {
     const { user: currentUser } = this.props;
     console.log("Hello ====> ", currentUser.roles);
