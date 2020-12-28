@@ -41,7 +41,7 @@ public class ChairmanController {
 
 
     @PostMapping("/setRole")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('CHAIRMAN')")
     public String setUserRole(@RequestBody SetRoleRequest setRoleRequest){
 
         User user = userRepository.findByUsername(setRoleRequest.getUsername())
@@ -49,7 +49,7 @@ public class ChairmanController {
 
         Set<Role> roles = new HashSet<>();
 
-        Role userRole = roleRepository.findByName(RoleEnum.ROLE_CHAIRMAN)
+        Role userRole = roleRepository.findByName(RoleEnum.ROLE_REVIEWER)
                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 
         roles = user.getRoles();

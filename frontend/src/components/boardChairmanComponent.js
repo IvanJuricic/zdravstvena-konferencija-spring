@@ -12,7 +12,7 @@ import AdminService from "../services/adminService";
 import ChairmanService from "../services/chairmanService";
 import ConferenceService from "../services/conferenceService";
 
-export default class BoardUser extends Component {
+export default class BoardChairman extends Component {
   constructor(props) {
     super(props);
 
@@ -28,6 +28,7 @@ export default class BoardUser extends Component {
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.downloadPapers = this.downloadPapers.bind(this);
+    this.onClick = this.onClick.bind(this);
   }
 
   downloadPapers(e) {
@@ -76,6 +77,12 @@ export default class BoardUser extends Component {
     }
   }
 
+  onClick(e) {
+    ChairmanService.setUserRole(e.target.innerText).then((res) =>
+      console.log({ res })
+    );
+  }
+
   componentDidMount() {
     AdminService.getAllUsers()
       .then((response) => {
@@ -93,6 +100,9 @@ export default class BoardUser extends Component {
   }
 
   render() {
+    const userNames = this.state.users.filter((user) => {
+      return this.state.search && user.username.indexOf(this.state.search) >= 0;
+    });
     return (
       <div className="container">
         <header className="jumbotron">
@@ -111,6 +121,35 @@ export default class BoardUser extends Component {
           >
             Preuzmi sve radove
           </button>
+
+          <br />
+          <br />
+
+          <Form>
+            <div className="form-group">
+              <label>
+                Pronađi korisnika i pridodaj ulogu recenzenta:
+                <Input
+                  placeholder="Pronađi korisnika"
+                  type="text"
+                  className="form-control"
+                  name="search"
+                  value={this.state.search}
+                  autocomplete="off"
+                  onChange={this.onChange}
+                />
+              </label>
+              {userNames.map((user) => (
+                <li key={user.id} onClick={this.onClick}>
+                  {user.username}
+                </li>
+              ))}
+            </div>
+
+            <div className="form-group">
+              <button className="btn btn-primary btn-block">Dodaj ulogu</button>
+            </div>
+          </Form>
         </header>
       </div>
     );

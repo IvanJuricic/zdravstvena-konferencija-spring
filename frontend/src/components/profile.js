@@ -2,12 +2,18 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
+import UserService from "../services/userService";
+
 class Profile extends Component {
-  componentDidMount() {}
+  componentDidMount() {
+    const id = this.props.user.id;
+
+    UserService.getUserData(id).then((res) => console.log({ res }));
+  }
 
   render() {
     const { user: currentUser } = this.props;
-    console.log("Hello ====> ", currentUser.roles);
+
     if (!currentUser) {
       return <Redirect to="/login" />;
     }

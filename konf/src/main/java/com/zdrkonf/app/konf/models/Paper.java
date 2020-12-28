@@ -15,11 +15,20 @@ public class Paper {
 
     private String paperURL;
 
-    //private List<String> comments;
+    private List<Review> reviews;
 
-    public Paper(String paperName, String paperURL) {
+    public Paper(String paperName, String paperURL, List<Review> reviews) {
         this.paperName = paperName;
         this.paperURL = paperURL;
+        this.reviews = reviews;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 
     public String getId() {

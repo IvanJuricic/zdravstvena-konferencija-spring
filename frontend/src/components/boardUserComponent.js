@@ -1,18 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { Component } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
+import Textarea from "react-validation/build/textarea";
+import Select from "react-validation/build/select";
 
-import UserService from "../services/userService";
+import AdminService from "../services/adminService";
 import PaperService from "../services/paperService";
 
 import { storage } from "../firebase";
-import button from "react-validation/build/button";
 
-export default function BoardUser(props) {
-  const [file, setFile] = useState();
-  const [content, setContent] = useState("");
+export default class BoardUser extends Component {
+  constructor(props) {
+    super(props);
 
-  const handleSave = (e) => {
+    this.state = {
+      title: "",
+      description: "",
+      search: "",
+      selectedUser: "",
+      selectedPaper: null,
+      users: [],
+      papers: [],
+    };
+
+    this.onChange = this.onChange.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.onSelect = this.onSelect.bind(this);
+    this.onClick = this.onClick.bind(this);
+  }
+
+  handleSave(e) {
     const file = e.target.files[0];
     const user = JSON.parse(localStorage.getItem("user"));
     const fileName = file.name;
@@ -21,42 +38,119 @@ export default function BoardUser(props) {
 
     fileRef.put(file).then(() => {
       fileRef.getDownloadURL().then((res) => {
-        PaperService.uploadPaper(res, fileName).then(() =>
-          PaperService.sendConfEmail(user.email).then((res) => console.log(res))
+        PaperService.uploadPaper(res, fileName, user.id).then(
+          (res) =>
+            /*PaperService.sendConfEmail(user.email).then(() => {
+            this.setState({
+              papers: [...this.state.papers, file.name],
+            });
+          })*/
+            console.log("Uploadan rad sa backenda => ", res),
+          this.setState({
+            papers: [...this.state.papers, res],
+          })
         );
       });
     });
-  };
+  }
 
-  useEffect(() => {
-    UserService.getUserBoard().then(
-      (response) => {
-        setContent(response.data);
-      },
-      (error) => {
-        setContent("Greska!");
-      }
+  onSelect(e) {
+    this.setState({
+      selectedPaper: e.target.innerText,
+    });
+  }
+
+  onClick(e) {
+    const user = this.state.users.filter((user) => {
+      return !user.username.search(e.target.innerText);
+    });
+
+    const userObj = { ...user };
+
+    AdminService.setAuthor(
+      userObj[0].id,
+      this.state.selectedPaper
+    ).then((res) => console.log("Rad dodan autoru", { res }));
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+  componentDidMount() {
+    AdminService.getAllUsers().then((response) => {
+      this.setState({
+        users: response.data,
+      });
+      const user = JSON.parse(localStorage.getItem("user"));
+      PaperService.getUserPapers(user.id).then((res) => {
+        this.setState({
+          papers: [...this.state.papers, ...res.data],
+        });
+      });
+    });
+  }
+
+  render() {
+    const userNames = this.state.users.filter((user) => {
+      return this.state.search && user.username.indexOf(this.state.search) >= 0;
+    });
+    return (
+      <div className="container">
+        <header className="jumbotron">
+          <label>Objavite svoj rad:</label>
+          <Form>
+            <label>
+              Privitak
+              <Input
+                type="file"
+                className="form-control"
+                name="fileName"
+                onChange={this.handleSave}
+              />
+            </label>
+          </Form>
+          <br />
+          <br />
+          <label>Popis radova:</label>
+          {this.state.papers.map((paper) => (
+            <li key={paper.id} onClick={this.onSelect}>
+              {paper.title}
+            </li>
+          ))}
+          <br />
+          <br />
+          <Form>
+            <div className="form-group">
+              <label>
+                Pronađi korisnika i pridodaj ga kao autora odabranog rada:
+                <Input
+                  placeholder="Pronađi korisnika"
+                  type="text"
+                  className="form-control"
+                  name="search"
+                  value={this.state.search}
+                  autocomplete="off"
+                  onChange={this.onChange}
+                />
+              </label>
+              {userNames.map((user) => (
+                <li key={user.id} onClick={this.onClick}>
+                  {user.username}
+                </li>
+              ))}
+            </div>
+
+            <div className="form-group">
+              <button className="btn btn-primary btn-block">
+                Dodaj autora
+              </button>
+            </div>
+          </Form>
+          <br />
+          <br />
+        </header>
+      </div>
     );
-  }, []);
-
-  return (
-    <div className="container">
-      <header className="jumbotron">
-        <h3>{content}</h3>
-      </header>
-
-      <label>Objavite svoj rad:</label>
-      <Form>
-        <label>
-          Privitak
-          <Input
-            type="file"
-            className="form-control"
-            name="fileName"
-            onChange={handleSave}
-          />
-        </label>
-      </Form>
-    </div>
-  );
+  }
 }

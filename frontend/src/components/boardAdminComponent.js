@@ -7,7 +7,7 @@ import Select from "react-validation/build/select";
 import AdminService from "../services/adminService";
 import ConferenceService from "../services/conferenceService";
 
-export default class BoardUser extends Component {
+export default class BoardAdmin extends Component {
   constructor(props) {
     super(props);
 

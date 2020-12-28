@@ -39,7 +39,15 @@ public class User {
 
     private boolean isAuthorized;
 
-    //List<String> papers;
+    public List<String> getPapers() {
+        return papers;
+    }
+
+    public void setPapers(List<String> papers) {
+        this.papers = papers;
+    }
+
+    List<String> papers;
 
     /* Getters and Setters */
     public String getPassword() {
@@ -90,11 +98,12 @@ public class User {
         this.section = section;
     }
 
-    public User(String username, String email, String section, String password){
+    public User(@NotBlank @Size(max = 20) String username, @NotBlank @Size(max = 50) @Email String email, @NotBlank String section, String password, List<String> papers) {
         this.username = username;
         this.email = email;
         this.section = section;
         this.password = password;
+        this.papers = papers;
     }
 
     public String toString(){

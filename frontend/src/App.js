@@ -42,6 +42,7 @@ class App extends Component {
         currentUser: user,
         showChairmanBoard: user.roles.includes("ROLE_CHAIRMAN"),
         showAdminBoard: user.roles.includes("ROLE_ADMIN"),
+        showReviewerBoard: user.roles.includes("ROLE_REVIEWER"),
       });
     }
   }
@@ -51,7 +52,12 @@ class App extends Component {
   }
 
   render() {
-    const { currentUser, showChairmanBoard, showAdminBoard } = this.state;
+    const {
+      currentUser,
+      showChairmanBoard,
+      showAdminBoard,
+      showReviewerBoard,
+    } = this.state;
 
     return (
       <Router history={history}>
@@ -74,6 +80,14 @@ class App extends Component {
                 </li>
               )}
 
+              {showReviewerBoard && (
+                <li className="nav-item">
+                  <Link to={"/chairman"} className="nav-link">
+                    Reviewer Board
+                  </Link>
+                </li>
+              )}
+
               {showChairmanBoard && (
                 <li className="nav-item">
                   <Link to={"/chairman"} className="nav-link">
@@ -83,7 +97,7 @@ class App extends Component {
               )}
 
               {currentUser ? (
-                !showAdminBoard && !showChairmanBoard ? (
+                !showAdminBoard && !showChairmanBoard && !showReviewerBoard ? (
                   <li className="nav-item">
                     <Link to={"/user"} className="nav-link">
                       User

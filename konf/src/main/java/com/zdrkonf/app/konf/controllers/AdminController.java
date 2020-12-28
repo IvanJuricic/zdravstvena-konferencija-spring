@@ -1,15 +1,15 @@
 package com.zdrkonf.app.konf.controllers;
 
 
-import com.zdrkonf.app.konf.models.Conference;
-import com.zdrkonf.app.konf.models.Role;
-import com.zdrkonf.app.konf.models.RoleEnum;
-import com.zdrkonf.app.konf.models.User;
+import com.zdrkonf.app.konf.models.*;
 import com.zdrkonf.app.konf.repositories.ConferenceRepository;
+import com.zdrkonf.app.konf.repositories.PaperRepository;
 import com.zdrkonf.app.konf.repositories.RoleRepository;
 import com.zdrkonf.app.konf.repositories.UserRepository;
+import com.zdrkonf.app.konf.request.AuthorRequest;
 import com.zdrkonf.app.konf.request.ConferenceDetailsRequest;
 import com.zdrkonf.app.konf.request.SetRoleRequest;
+import com.zdrkonf.app.konf.security.services.UserDetailsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +37,9 @@ public class AdminController {
     @Autowired
     RoleRepository roleRepository;
 
+    @Autowired
+    PaperRepository paperRepository;
+
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @PostMapping("/conf")
@@ -50,7 +53,7 @@ public class AdminController {
     }
 
     @GetMapping("/getAll")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('CHAIRMAN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CHAIRMAN') or hasRole('USER')")
     public List<User> getUsers(){
         return userRepository.findAll();
     }
@@ -77,6 +80,22 @@ public class AdminController {
 
     }
 
+    @PostMapping("/setAuthor")
+    @PreAuthorize("hasRole('USER')")
+    public String setAuthor(@RequestBody AuthorRequest authorRequest){
+        Paper paper = paperRepository.findBypaperName(authorRequest.getPaperName());
+
+        Optional<User> user = userRepository.findById(authorRequest.getId());
+
+        try{
+            user.get().getPapers().add(paper.getId());
+            userRepository.save(user.get());
+            return "Ok";
+        } catch (Exception e){
+            return e.toString();
+        }
+
+    }
 
 
 }

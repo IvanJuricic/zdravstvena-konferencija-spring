@@ -15,6 +15,15 @@ class AdminService {
       { headers: authHeader() }
     );
   }
+
+  setAuthor(id, paperName) {
+    console.log("Id => ", id);
+    return axios.post(
+      API_URL + "setAuthor",
+      { id, paperName },
+      { headers: authHeader() }
+    );
+  }
 }
 
 export default new AdminService();

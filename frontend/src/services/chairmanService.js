@@ -13,6 +13,14 @@ class ChairmanService {
       .post(API_URL + "email", { email }, { headers: authHeader() })
       .then((res) => console.log(res));
   }
+
+  setUserRole(username) {
+    return axios.post(
+      API_URL + "setRole",
+      { username },
+      { headers: authHeader() }
+    );
+  }
 }
 
 export default new ChairmanService();
