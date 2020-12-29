@@ -4,9 +4,10 @@ import Input from "react-validation/build/input";
 import Textarea from "react-validation/build/textarea";
 import Select from "react-validation/build/select";
 
-import FileSaver from "file-saver";
+import SkyLight from "react-skylight";
+import ModalUser from "./modalContentUser";
 
-import { storage } from "../firebase";
+import FileSaver from "file-saver";
 
 import AdminService from "../services/adminService";
 import ChairmanService from "../services/chairmanService";
@@ -20,7 +21,9 @@ export default class BoardChairman extends Component {
       title: "",
       description: "",
       search: "",
+      isOpen: false,
       selectedUser: "",
+      editUser: { id: "", username: "", email: "" },
       users: [],
       papers: 0,
     };
@@ -29,6 +32,8 @@ export default class BoardChairman extends Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.downloadPapers = this.downloadPapers.bind(this);
     this.onClick = this.onClick.bind(this);
+    this.setModalUser = this.setModalUser.bind(this);
+    this.removeModalUser = this.removeModalUser.bind(this);
   }
 
   downloadPapers(e) {
@@ -77,10 +82,28 @@ export default class BoardChairman extends Component {
     }
   }
 
-  onClick(e) {
-    ChairmanService.setUserRole(e.target.innerText).then((res) =>
+  removeModalUser() {
+    this.setState({
+      editUser: { id: "", username: "", email: "" },
+    });
+  }
+
+  setModalUser(username) {}
+
+  async onClick(e) {
+    const user = this.state.users.filter((user) => {
+      return !user.username.search(e.target.innerText);
+    });
+    console.log("Svi useri => ", this.state.users);
+    console.log("Filtrirano => ", user);
+    const userObj = { ...user };
+    this.setState({
+      editUser: userObj[0],
+    });
+    await this.customDialog.show();
+    /*ChairmanService.setUserRole(e.target.innerText).then((res) =>
       console.log({ res })
-    );
+    );*/
   }
 
   componentDidMount() {
@@ -103,14 +126,34 @@ export default class BoardChairman extends Component {
     const userNames = this.state.users.filter((user) => {
       return this.state.search && user.username.indexOf(this.state.search) >= 0;
     });
+
+    var myBigGreenDialog = {
+      backgroundColor: "#00897B",
+      color: "#ffffff",
+      width: "70%",
+      height: "600px",
+      marginTop: "-300px",
+      marginLeft: "-35%",
+    };
+
     return (
       <div className="container">
         <header className="jumbotron">
           <label>Lista korisnika:</label>
           {this.state.users.map((user) => (
-            <li key={user.id}>{user.username}</li>
+            <li key={user.id} onClick={this.onClick}>
+              {user.username}
+            </li>
           ))}
-
+          <SkyLight
+            afterClose={this.removeModalUser}
+            dialogStyles={myBigGreenDialog}
+            hideOnOverlayClicked
+            ref={(ref) => (this.customDialog = ref)}
+            title="Podaci o korisnicima"
+          >
+            <ModalUser userToEdit={this.state.editUser} />
+          </SkyLight>
           <br />
           <br />
 
@@ -135,7 +178,7 @@ export default class BoardChairman extends Component {
                   className="form-control"
                   name="search"
                   value={this.state.search}
-                  autocomplete="off"
+                  autoComplete="off"
                   onChange={this.onChange}
                 />
               </label>
