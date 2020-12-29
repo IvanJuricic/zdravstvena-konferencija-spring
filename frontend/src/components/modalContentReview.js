@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
-
-import ChairmanService from "../services/chairmanService";
-
+import { PDFViewer } from "react-view-pdf";
+//import ChairmanService from "../services/chairmanService";
+/*
 function submitData(id, username) {
   console.log(id, username);
   ChairmanService.editUserData(id, username).then((res) => console.log(res));
 }
-
-export default function ModalContentUser(props) {
+*/
+export default function ModalContentReview(props) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -23,35 +23,28 @@ export default function ModalContentUser(props) {
             className="form-control"
             name="search"
             autoComplete="off"
-            value={props.userToEdit.id}
+            value={props.paper.id}
             disabled={true}
           />
           <br />
           <Input
             type="text"
-            placeholder={props.userToEdit.username}
             className="form-control"
             name="search"
             autoComplete="off"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={props.paper.title}
+            //onChange={(e) => setUsername(e.target.value)}
           />
-          {}
+
           <br />
-          <Input
-            type="text"
-            className="form-control"
-            name="search"
-            autoComplete="off"
-            value={props.userToEdit.email}
-          />
           <br />
         </div>
       </Form>
+      <div style={{ position: "sticky", height: "200px" }}>
+        <PDFViewer url={props.paper.url} />
+      </div>
 
-      <button onClick={() => submitData(props.userToEdit.id, username)}>
-        Submit changes
-      </button>
+      <button onClick={() => console.log("Submited!")}>Submit changes</button>
     </div>
   );
 }

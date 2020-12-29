@@ -6,6 +6,10 @@ import Select from "react-validation/build/select";
 
 import FileSaver from "file-saver";
 
+import SkyLight from "react-skylight";
+import ModalReview from "./modalContentReview";
+import { PDFViewer } from "react-view-pdf";
+
 import { storage } from "../firebase";
 
 import AdminService from "../services/adminService";
@@ -22,13 +26,14 @@ export default class BoardReviewer extends Component {
       search: "",
       selectedUser: "",
       users: [],
-      papers: 0,
+      papers: [],
+      paperToReview: { id: "", title: "", url: "" },
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.downloadPapers = this.downloadPapers.bind(this);
-    this.onClick = this.onClick.bind(this);
+    this.onSelect = this.onSelect.bind(this);
   }
 
   downloadPapers(e) {
@@ -63,6 +68,17 @@ export default class BoardReviewer extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  async onSelect(e) {
+    const paper = this.state.papers.filter((paper) => {
+      return !paper.title.search(e.target.innerText);
+    });
+    const paperObj = { ...paper };
+    this.setState({
+      paperToReview: paperObj[0],
+    });
+    await this.customDialog.show();
+  }
+
   onSubmit(e) {
     e.preventDefault();
     const data = {
@@ -75,12 +91,6 @@ export default class BoardReviewer extends Component {
     } catch (err) {
       console.log("Greska pri slanju");
     }
-  }
-
-  onClick(e) {
-    ChairmanService.setUserRole(e.target.innerText).then((res) =>
-      console.log({ res })
-    );
   }
 
   componentDidMount() {
@@ -103,11 +113,48 @@ export default class BoardReviewer extends Component {
     const userNames = this.state.users.filter((user) => {
       return this.state.search && user.username.indexOf(this.state.search) >= 0;
     });
+
+    var myBigGreenDialog = {
+      backgroundColor: "#00897B",
+      color: "#ffffff",
+      width: "70%",
+      height: "600px",
+      marginTop: "-300px",
+      marginLeft: "-35%",
+      overflow: "hidden",
+      padding: "20px",
+      display: "flex",
+      justifyContent: "center",
+    };
+
     return (
       <div className="container">
         <header className="jumbotron">
-          <label>Lista korisnika:</label>
-          <p>Hello there!!!</p>
+          <label>Popis predanih radova:</label>
+          {this.state.papers.map((paper) => (
+            <li key={paper.id} onClick={this.onSelect}>
+              {paper.title}
+            </li>
+          ))}
+          <SkyLight
+            afterClose={this.removeModalUser}
+            dialogStyles={myBigGreenDialog}
+            hideOnOverlayClicked
+            ref={(ref) => (this.customDialog = ref)}
+            title="Podaci o korisnicima"
+          >
+            <div
+              style={{
+                height: "100%",
+                width: "70%",
+                position: "absolute",
+              }}
+            >
+              <PDFViewer url={this.state.paperToReview.url} />
+            </div>
+
+            {/*<ModalReview paper={this.state.paperToReview} />*/}
+          </SkyLight>
         </header>
       </div>
     );

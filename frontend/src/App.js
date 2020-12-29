@@ -12,6 +12,7 @@ import Profile from "./components/profile";
 import BoardUser from "./components/boardUserComponent";
 import BoardAdmin from "./components/boardAdminComponent";
 import BoardChairman from "./components/boardChairmanComponent";
+import BoardReviewer from "./components/boardReviewerComponent";
 
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
@@ -26,6 +27,7 @@ class App extends Component {
     this.state = {
       showAdminBoard: false,
       showChairmanBoard: false,
+      showReviewerBoard: false,
       currentUser: undefined,
     };
 
@@ -82,7 +84,7 @@ class App extends Component {
 
               {showReviewerBoard && (
                 <li className="nav-item">
-                  <Link to={"/chairman"} className="nav-link">
+                  <Link to={"/reviewer"} className="nav-link">
                     Reviewer Board
                   </Link>
                 </li>
@@ -146,6 +148,7 @@ class App extends Component {
               <Route path="/user" component={BoardUser} />
               <Route path="/admin" component={BoardAdmin} />
               <Route path="/chairman" component={BoardChairman} />
+              <Route path="/reviewer" component={BoardReviewer} />
             </Switch>
           </div>
         </div>
