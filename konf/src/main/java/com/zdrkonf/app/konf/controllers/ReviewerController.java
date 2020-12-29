@@ -27,22 +27,26 @@ public class ReviewerController {
     @Autowired
     EmailController emailController;
 
-    /*
     @PostMapping("/addReview/{id}")
     @PreAuthorize("hasRole('REVIEWER')")
-    public String addReview(@PathVariable("id") String paperID, @RequestBody ReviewRequest reviewRequest){
+    public Paper addReview(@PathVariable("id") String paperID, @RequestBody ReviewRequest reviewRequest){
         Optional<Paper> paper = paperRepository.findById(paperID);
 
-        Review newReview = new Review(reviewRequest.getComment(), reviewRequest.getGrade(), reviewRequest.isAccepted());
-        List<Review> reviews = paper.get().getReviews();
-        reviews.add(newReview);
+        Review newReview = new Review(reviewRequest.getReviewerId(), reviewRequest.getComment());
 
-        if(!reviewRequest.isAccepted()){
-            emailController.sendPaperSubmitEmail(emailRequest.getEmail());
-        }
+        reviewRepository.save(newReview);
 
+        List<String> reviews = paper.get().getReviews();
 
-    }*/
+        reviews.add(newReview.getId());
+
+        paper.get().setReviews(reviews);
+        paper.get().setAccepted(reviewRequest.getIsAccepted());
+
+        paperRepository.save(paper.get());
+
+        return paper.get();
+    }
 
 
 }

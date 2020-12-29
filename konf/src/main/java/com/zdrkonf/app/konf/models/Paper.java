@@ -15,19 +15,29 @@ public class Paper {
 
     private String paperURL;
 
-    private List<Review> reviews;
+    private List<String> reviews;
 
-    public Paper(String paperName, String paperURL, List<Review> reviews) {
+    private boolean isAccepted;
+
+    public Paper(String paperName, String paperURL, List<String> reviews) {
         this.paperName = paperName;
         this.paperURL = paperURL;
         this.reviews = reviews;
     }
 
-    public List<Review> getReviews() {
+    public boolean isAccepted() {
+        return isAccepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        isAccepted = accepted;
+    }
+
+    public List<String> getReviews() {
         return reviews;
     }
 
-    public void setReviews(List<Review> reviews) {
+    public void setReviews(List<String> reviews) {
         this.reviews = reviews;
     }
 

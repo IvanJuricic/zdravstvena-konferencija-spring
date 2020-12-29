@@ -7,7 +7,7 @@ import Select from "react-validation/build/select";
 import FileSaver from "file-saver";
 
 import SkyLight from "react-skylight";
-import ModalReview from "./modalContentReview";
+import ModalPaperPreview from "./modalPaperPreview";
 import { PDFViewer } from "react-view-pdf";
 
 import { storage } from "../firebase";
@@ -26,6 +26,7 @@ export default class BoardReviewer extends Component {
       search: "",
       selectedUser: "",
       users: [],
+      currentUser: JSON.parse(localStorage.getItem("user")),
       papers: [],
       paperToReview: { id: "", title: "", url: "" },
     };
@@ -118,13 +119,11 @@ export default class BoardReviewer extends Component {
       backgroundColor: "#00897B",
       color: "#ffffff",
       width: "70%",
-      height: "600px",
+      height: "650px",
       marginTop: "-300px",
       marginLeft: "-35%",
-      overflow: "hidden",
+      overflowX: "hidden",
       padding: "20px",
-      display: "flex",
-      justifyContent: "center",
     };
 
     return (
@@ -132,28 +131,30 @@ export default class BoardReviewer extends Component {
         <header className="jumbotron">
           <label>Popis predanih radova:</label>
           {this.state.papers.map((paper) => (
-            <li key={paper.id} onClick={this.onSelect}>
-              {paper.title}
-            </li>
+            <div
+              key={paper.id}
+              onClick={this.onSelect}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
+            >
+              <p style={{ fontSize: "24px" }}>{paper.title}</p>
+            </div>
           ))}
           <SkyLight
             afterClose={this.removeModalUser}
             dialogStyles={myBigGreenDialog}
             hideOnOverlayClicked
             ref={(ref) => (this.customDialog = ref)}
-            title="Podaci o korisnicima"
+            title={this.state.paperToReview.title}
           >
-            <div
-              style={{
-                height: "100%",
-                width: "70%",
-                position: "absolute",
-              }}
-            >
-              <PDFViewer url={this.state.paperToReview.url} />
-            </div>
-
-            {/*<ModalReview paper={this.state.paperToReview} />*/}
+            <ModalPaperPreview
+              paper={this.state.paperToReview}
+              reviewer={this.state.currentUser}
+            />
           </SkyLight>
         </header>
       </div>

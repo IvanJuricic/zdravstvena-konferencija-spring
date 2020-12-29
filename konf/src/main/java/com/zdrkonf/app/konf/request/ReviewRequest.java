@@ -2,18 +2,26 @@ package com.zdrkonf.app.konf.request;
 
 public class ReviewRequest {
 
-    private String comment;
+    private String reviewerId;
 
-    private int grade;
+    private String comment;
 
     private boolean isAccepted;
 
-    public boolean isAccepted() {
+    public boolean getIsAccepted() {
         return isAccepted;
     }
 
-    public void setAccepted(boolean accepted) {
-        isAccepted = accepted;
+    public void setAccepted(boolean isAccepted) {
+        this.isAccepted = isAccepted;
+    }
+
+    public String getReviewerId() {
+        return reviewerId;
+    }
+
+    public void setReviewerId(String reviewerId) {
+        this.reviewerId = reviewerId;
     }
 
     public String getComment() {
@@ -24,11 +32,4 @@ public class ReviewRequest {
         this.comment = comment;
     }
 
-    public int getGrade() {
-        return grade;
-    }
-
-    public void setGrade(int grade) {
-        this.grade = grade;
-    }
 }

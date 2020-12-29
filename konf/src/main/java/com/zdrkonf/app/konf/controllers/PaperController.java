@@ -34,7 +34,7 @@ public class PaperController {
     @PostMapping("/upload/{id}")
     public Paper uploadPaper(@RequestBody PaperRequest paperRequest, @PathVariable("id") String userId){
 
-        List<Review> reviewList = new ArrayList<>();
+        List<String> reviewList = new ArrayList<>();
 
         Paper newPaper = new Paper(paperRequest.getPaperName(), paperRequest.getPaperURL(), reviewList);
 

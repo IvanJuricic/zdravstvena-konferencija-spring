@@ -9,24 +9,21 @@ public class Review {
     @Id
     private String id;
 
+    private String reviewerId;
+
     private String comment;
 
-    private int grade;
-
-    private boolean isAccepted;
-
-    public Review(String comment, int grade, boolean isAccepted) {
+    public Review(String reviewerId, String comment) {
+        this.reviewerId = reviewerId;
         this.comment = comment;
-        this.grade = grade;
-        this.isAccepted = isAccepted;
     }
 
-    public boolean isAccepted() {
-        return isAccepted;
+    public String getReviewerId() {
+        return reviewerId;
     }
 
-    public void setAccepted(boolean accepted) {
-        isAccepted = accepted;
+    public void setReviewerId(String reviewerId) {
+        this.reviewerId = reviewerId;
     }
 
     public String getId() {
@@ -45,11 +42,4 @@ public class Review {
         this.comment = comment;
     }
 
-    public int getGrade() {
-        return grade;
-    }
-
-    public void setGrade(int grade) {
-        this.grade = grade;
-    }
 }
