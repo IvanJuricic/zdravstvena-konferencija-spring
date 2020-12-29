@@ -94,8 +94,6 @@ export default class BoardChairman extends Component {
     const user = this.state.users.filter((user) => {
       return !user.username.search(e.target.innerText);
     });
-    console.log("Svi useri => ", this.state.users);
-    console.log("Filtrirano => ", user);
     const userObj = { ...user };
     this.setState({
       editUser: userObj[0],

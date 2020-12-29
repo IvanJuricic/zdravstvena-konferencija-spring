@@ -7,6 +7,7 @@ import com.zdrkonf.app.konf.repositories.PaperRepository;
 import com.zdrkonf.app.konf.repositories.RoleRepository;
 import com.zdrkonf.app.konf.repositories.UserRepository;
 import com.zdrkonf.app.konf.request.ConferenceDetailsRequest;
+import com.zdrkonf.app.konf.request.EditUserRequest;
 import com.zdrkonf.app.konf.request.SetRoleRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,20 @@ public class ChairmanController {
         userRepository.save(user);
 
         return user.getRoles().toString();
+
+    }
+
+    @PostMapping("/editUser/{id}")
+    @PreAuthorize("hasRole('CHAIRMAN')")
+    public User editUserDate(@PathVariable("id") String userId, @RequestBody EditUserRequest editUserRequest){
+
+        Optional<User> user = userRepository.findById(userId);
+
+        user.get().setUsername(editUserRequest.getUsername());
+
+        userRepository.save(user.get());
+
+        return user.get();
 
     }
 

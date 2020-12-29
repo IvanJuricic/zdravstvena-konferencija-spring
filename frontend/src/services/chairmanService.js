@@ -21,6 +21,14 @@ class ChairmanService {
       { headers: authHeader() }
     );
   }
+
+  editUserData(id, username) {
+    return axios.post(
+      API_URL + `editUser/${id}`,
+      { username },
+      { headers: authHeader() }
+    );
+  }
 }
 
 export default new ChairmanService();
