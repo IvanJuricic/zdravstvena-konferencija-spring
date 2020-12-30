@@ -37,6 +37,10 @@ public class User {
 
     private String password;
 
+    private String institute;
+
+    private String verificationToken;
+
     private boolean isAuthorized;
 
     public List<String> getPapers() {
@@ -56,6 +60,30 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
+    }
+
+    public String getInstitute() {
+        return institute;
+    }
+
+    public void setInstitute(String institute) {
+        this.institute = institute;
+    }
+
+    public boolean getIsAuthorized() {
+        return isAuthorized;
+    }
+
+    public void setIsAuthorized(boolean authorized) {
+        isAuthorized = authorized;
     }
 
     public String getId() {
@@ -98,12 +126,14 @@ public class User {
         this.section = section;
     }
 
-    public User(@NotBlank @Size(max = 20) String username, @NotBlank @Size(max = 50) @Email String email, @NotBlank String section, String password, List<String> papers) {
+    public User(@NotBlank @Size(max = 20) String username, @NotBlank @Size(max = 50) @Email String email, @NotBlank String section, String password, List<String> papers, String institute, boolean isAuthorized) {
         this.username = username;
         this.email = email;
         this.section = section;
         this.password = password;
         this.papers = papers;
+        this.institute = institute;
+        this.isAuthorized = isAuthorized;
     }
 
     public String toString(){

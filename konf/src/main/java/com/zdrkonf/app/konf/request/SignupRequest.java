@@ -18,18 +18,16 @@ public class SignupRequest {
 
     private Set<String> roles;
 
-    @NotBlank
-    private String password;
-
+    private String institute;
 
     private String section;
 
-    public String getPassword() {
-        return password;
+    public String getInstitute() {
+        return institute;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setInstitute(String institute) {
+        this.institute = institute;
     }
 
     public String getSection() {

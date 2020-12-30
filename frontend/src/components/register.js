@@ -53,14 +53,30 @@ class Register extends Component {
     this.handleRegister = this.handleRegister.bind(this);
     this.onChangeUsername = this.onChangeUsername.bind(this);
     this.onChangeEmail = this.onChangeEmail.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
+    this.onChangeSection = this.onChangeSection.bind(this);
+    this.onChangeInstitute = this.onChangeInstitute.bind(this);
+    //this.onChangePassword = this.onChangePassword.bind(this);
 
     this.state = {
       username: "",
       email: "",
       password: "",
+      section: "",
+      institute: "",
       successful: false,
     };
+  }
+
+  onChangeSection(e) {
+    this.setState({
+      section: e.target.value,
+    });
+  }
+
+  onChangeInstitute(e) {
+    this.setState({
+      institute: e.target.value,
+    });
   }
 
   onChangeUsername(e) {
@@ -72,12 +88,6 @@ class Register extends Component {
   onChangeEmail(e) {
     this.setState({
       email: e.target.value,
-    });
-  }
-
-  onChangePassword(e) {
-    this.setState({
-      password: e.target.value,
     });
   }
 
@@ -93,7 +103,12 @@ class Register extends Component {
     if (this.checkBtn.context._errors.length === 0) {
       this.props
         .dispatch(
-          register(this.state.username, this.state.email, this.state.password)
+          register(
+            this.state.username,
+            this.state.email,
+            this.state.section,
+            this.state.institute
+          )
         )
         .then(() => {
           this.setState({
@@ -129,7 +144,7 @@ class Register extends Component {
             {!this.state.successful && (
               <div>
                 <div className="form-group">
-                  <label htmlFor="username">Username</label>
+                  <label htmlFor="username">Korisničko ime</label>
                   <Input
                     type="text"
                     className="form-control"
@@ -152,7 +167,7 @@ class Register extends Component {
                     validations={[required, email]}
                   />
                 </div>
-
+                {/*
                 <div className="form-group">
                   <label htmlFor="password">Password</label>
                   <Input
@@ -163,8 +178,27 @@ class Register extends Component {
                     onChange={this.onChangePassword}
                     validations={[required, vpassword]}
                   />
+                </div> */}
+                <div className="form-group">
+                  <label htmlFor="section">Sekcija</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="section"
+                    value={this.state.section}
+                    onChange={this.onChangeSection}
+                  />
                 </div>
-
+                <div className="form-group">
+                  <label htmlFor="institute">Institut</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="institute"
+                    value={this.state.institute}
+                    onChange={this.onChangeInstitute}
+                  />
+                </div>
                 <div className="form-group">
                   <button className="btn btn-primary btn-block">Sign Up</button>
                 </div>

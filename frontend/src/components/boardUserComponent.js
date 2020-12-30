@@ -35,21 +35,19 @@ export default class BoardUser extends Component {
     const fileName = file.name;
     const storageRef = storage.ref("papers");
     const fileRef = storageRef.child(fileName);
-
-    fileRef.put(file).then(() => {
-      fileRef.getDownloadURL().then((res) => {
-        PaperService.uploadPaper(res, fileName, user.id).then(
-          (res) =>
-            /*PaperService.sendConfEmail(user.email).then(() => {
+    /*PaperService.sendConfEmail(user.email).then(() => {
             this.setState({
               papers: [...this.state.papers, file.name],
             });
           })*/
-            console.log("Uploadan rad sa backenda => ", res),
+    fileRef.put(file).then(() => {
+      fileRef.getDownloadURL().then((res) => {
+        PaperService.uploadPaper(res, fileName, user.id).then((response) => {
+          console.log("Uploadan rad sa backenda => ", response);
           this.setState({
-            papers: [...this.state.papers, res],
-          })
-        );
+            papers: [...this.state.papers, response.data],
+          });
+        });
       });
     });
   }
@@ -113,6 +111,7 @@ export default class BoardUser extends Component {
           <br />
           <br />
           <label>Popis radova:</label>
+          {console.log("Zdravko", this.state.papers)}
           {this.state.papers.map((paper) => (
             <li key={paper.id} onClick={this.onSelect}>
               {paper.title}
