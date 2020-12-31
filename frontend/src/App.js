@@ -65,18 +65,18 @@ class App extends Component {
       <Router history={history}>
         <div>
           <nav className="navbar navbar-expand navbar-dark bg-dark">
-            <Link to={"/"} className="navbar-brand">
+            <Link to={"/"} className="navbar-brand mb-0 h1">
               bezKoder
             </Link>
             <div className="navbar-nav mr-auto">
               <li className="nav-item">
-                <Link to={"/home"} className="nav-link">
+                <Link to={"/home"} className="navbar-brand">
                   Home
                 </Link>
               </li>
               {showAdminBoard && (
                 <li className="nav-item">
-                  <Link to={"/admin"} className="nav-link">
+                  <Link to={"/admin"} className="navbar-brand">
                     Admin Board
                   </Link>
                 </li>
@@ -84,7 +84,7 @@ class App extends Component {
 
               {showReviewerBoard && (
                 <li className="nav-item">
-                  <Link to={"/reviewer"} className="nav-link">
+                  <Link to={"/reviewer"} className="navbar-brand">
                     Reviewer Board
                   </Link>
                 </li>
@@ -92,7 +92,7 @@ class App extends Component {
 
               {showChairmanBoard && (
                 <li className="nav-item">
-                  <Link to={"/chairman"} className="nav-link">
+                  <Link to={"/chairman"} className="navbar-brand">
                     Chairman Board
                   </Link>
                 </li>
@@ -101,7 +101,7 @@ class App extends Component {
               {currentUser ? (
                 !showAdminBoard && !showChairmanBoard && !showReviewerBoard ? (
                   <li className="nav-item">
-                    <Link to={"/user"} className="nav-link">
+                    <Link to={"/user"} className="navbar-brand">
                       User
                     </Link>
                   </li>
@@ -112,12 +112,16 @@ class App extends Component {
             {currentUser ? (
               <div className="navbar-nav ml-auto">
                 <li className="nav-item">
-                  <Link to={"/profile"} className="nav-link">
+                  <Link to={"/profile"} className="navbar-brand">
                     {currentUser.username}
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <a href="/login" className="nav-link" onClick={this.logOut}>
+                  <a
+                    href="/login"
+                    className="navbar-brand"
+                    onClick={this.logOut}
+                  >
                     LogOut
                   </a>
                 </li>
@@ -125,13 +129,13 @@ class App extends Component {
             ) : (
               <div className="navbar-nav ml-auto">
                 <li className="nav-item">
-                  <Link to={"/login"} className="nav-link">
+                  <Link to={"/login"} className="navbar-brand">
                     Login
                   </Link>
                 </li>
 
                 <li className="nav-item">
-                  <Link to={"/register"} className="nav-link">
+                  <Link to={"/register"} className="navbar-brand">
                     Sign Up
                   </Link>
                 </li>
@@ -139,7 +143,10 @@ class App extends Component {
             )}
           </nav>
 
-          <div className="container mt-3">
+          <div
+            className="container"
+            style={{ margin: "0 auto", padding: "30px" }}
+          >
             <Switch>
               <Route exact path={["/", "/home"]} component={Home} />
               <Route exact path="/login" component={Login} />
