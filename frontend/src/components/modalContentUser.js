@@ -23,13 +23,13 @@ export default function ModalContentUser(props) {
             className="form-control"
             name="search"
             autoComplete="off"
-            value={props.userToEdit.id}
+            value={props.user.id}
             disabled={true}
           />
           <br />
           <Input
             type="text"
-            placeholder={props.userToEdit.username}
+            placeholder={props.user.username}
             className="form-control"
             name="search"
             autoComplete="off"
@@ -43,13 +43,13 @@ export default function ModalContentUser(props) {
             className="form-control"
             name="search"
             autoComplete="off"
-            value={props.userToEdit.email}
+            value={props.user.email}
           />
           <br />
         </div>
       </Form>
 
-      <button onClick={() => submitData(props.userToEdit.id, username)}>
+      <button onClick={() => submitData(props.user.id, username)}>
         Submit changes
       </button>
     </div>

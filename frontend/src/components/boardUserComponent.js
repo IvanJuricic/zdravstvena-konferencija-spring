@@ -65,11 +65,10 @@ export default class BoardUser extends Component {
       return paper.title.search(e.target.innerText) >= 0;
     });
 
-    this.setState({
-      paperToSee: { ...paper[0] },
-    });
-
     UserService.getPaperData(paper[0].id).then((res) => {
+      this.setState({
+        paperToSee: { ...res.data },
+      });
       UserService.getPaperReviews(res.data.id).then((resp) => {
         this.setState({
           reviews: [...this.state.reviews, ...resp.data],

@@ -7,14 +7,11 @@ import com.zdrkonf.app.konf.repositories.ConferenceRepository;
 import com.zdrkonf.app.konf.repositories.PaperRepository;
 import com.zdrkonf.app.konf.repositories.ReviewRepository;
 import com.zdrkonf.app.konf.repositories.UserRepository;
-import com.zdrkonf.app.konf.request.AuthorRequest;
-import com.zdrkonf.app.konf.request.ReviewRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,8 +58,8 @@ public class TestController {
     }
 
     @GetMapping("/paper/{id}")
-    public Paper getPaperData(@PathVariable("id") String paperId){
-        return paperRepository.findById(paperId).get();
+    public Optional<Paper> getPaperData(@PathVariable("id") String paperId){
+        return paperRepository.findById(paperId);
     }
 
     @GetMapping("/review/{id}")

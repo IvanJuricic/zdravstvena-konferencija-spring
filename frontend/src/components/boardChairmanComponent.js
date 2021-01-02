@@ -23,6 +23,7 @@ export default class BoardChairman extends Component {
       search: "",
       isOpen: false,
       selectedUser: "",
+      userSearch: "",
       editUser: { id: "", username: "", email: "" },
       users: [],
       papers: 0,
@@ -31,9 +32,29 @@ export default class BoardChairman extends Component {
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.downloadPapers = this.downloadPapers.bind(this);
-    this.onClick = this.onClick.bind(this);
+
     this.setModalUser = this.setModalUser.bind(this);
     this.removeModalUser = this.removeModalUser.bind(this);
+    this.onUserSelect = this.onUserSelect.bind(this);
+    this.onUserClick = this.onUserClick.bind(this);
+  }
+
+  onUserSelect(e) {
+    const user = this.state.users.filter((user) => {
+      return !user.username.search(e.target.innerText);
+    });
+    const userObj = { ...user };
+    this.setState({
+      editUser: userObj[0],
+    });
+    this.customDialog.show();
+  }
+
+  onUserClick(e) {
+    e.target.classList.toggle("active");
+    ChairmanService.setUserRole(e.target.innerText).then((res) => {
+      console.log(res);
+    });
   }
 
   downloadPapers(e) {
@@ -90,20 +111,6 @@ export default class BoardChairman extends Component {
 
   setModalUser(username) {}
 
-  async onClick(e) {
-    const user = this.state.users.filter((user) => {
-      return !user.username.search(e.target.innerText);
-    });
-    const userObj = { ...user };
-    this.setState({
-      editUser: userObj[0],
-    });
-    //await this.customDialog.show();
-    ChairmanService.setUserRole(e.target.innerText).then((res) =>
-      console.log({ res })
-    );
-  }
-
   componentDidMount() {
     AdminService.getAllUsers()
       .then((response) => {
@@ -122,7 +129,10 @@ export default class BoardChairman extends Component {
 
   render() {
     const userNames = this.state.users.filter((user) => {
-      return this.state.search && user.username.indexOf(this.state.search) >= 0;
+      return (
+        this.state.userSearch &&
+        user.username.indexOf(this.state.userSearch) >= 0
+      );
     });
 
     var myBigGreenDialog = {
@@ -136,62 +146,81 @@ export default class BoardChairman extends Component {
 
     return (
       <div className="container">
-        <header className="jumbotron">
-          <label>Lista korisnika:</label>
+        <p style={{ fontSize: "24px" }}>Lista korisnika:</p>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+          }}
+        >
           {this.state.users.map((user) => (
-            <li key={user.id} onClick={this.onClick}>
+            <button
+              type="button"
+              style={{ display: "flex", flexGrow: "1", margin: "5px" }}
+              className="btn btn-outline-dark btn-lg"
+              key={user.id}
+              onClick={this.onUserSelect}
+            >
               {user.username}
-            </li>
+            </button>
           ))}
-          <SkyLight
-            afterClose={this.removeModalUser}
-            dialogStyles={myBigGreenDialog}
-            hideOnOverlayClicked
-            ref={(ref) => (this.customDialog = ref)}
-            title="Podaci o korisnicima"
-          >
-            <ModalUser userToEdit={this.state.editUser} />
-          </SkyLight>
-          <br />
-          <br />
+        </div>
 
-          <label>Ukupan broj predanih radova: {this.state.papers.length}</label>
-          <button
-            className="btn btn-primary btn-block"
-            onClick={this.downloadPapers}
-          >
-            Preuzmi sve radove
-          </button>
+        <SkyLight
+          afterClose={this.removeModalUser}
+          dialogStyles={myBigGreenDialog}
+          hideOnOverlayClicked
+          ref={(ref) => (this.customDialog = ref)}
+          title="Podaci o korisnicima"
+        >
+          <ModalUser user={this.state.editUser} />
+        </SkyLight>
+        <br />
+        <br />
 
-          <br />
-          <br />
+        <p style={{ fontSize: "24px" }}>
+          Ukupan broj predanih radova: {this.state.papers.length}
+        </p>
+        <button
+          className="btn btn-dark btn-block"
+          onClick={this.downloadPapers}
+        >
+          Preuzmi sve radove
+        </button>
 
-          <Form>
-            <div className="form-group">
-              <label>
-                Pronađi korisnika i pridodaj ulogu recenzenta:
-                <Input
-                  placeholder="Pronađi korisnika"
-                  type="text"
-                  className="form-control"
-                  name="search"
-                  value={this.state.search}
-                  autoComplete="off"
-                  onChange={this.onChange}
-                />
-              </label>
-              {userNames.map((user) => (
-                <li key={user.id} onClick={this.onClick}>
-                  {user.username}
-                </li>
-              ))}
-            </div>
+        <br />
+        <br />
 
-            <div className="form-group">
-              <button className="btn btn-primary btn-block">Dodaj ulogu</button>
-            </div>
-          </Form>
-        </header>
+        <p style={{ fontSize: "24px" }}>
+          Pretraži korisnike i pridodaj ulogu recenzenta
+        </p>
+        <div className="form-group col-md-6">
+          <label htmlFor="inputEmail4">Korisničko ime</label>
+          <input
+            type="text"
+            className="form-control"
+            id="inputEmail4"
+            placeholder=""
+            name="userSearch"
+            value={this.state.userSearch}
+            autoComplete="off"
+            onChange={this.onChange}
+            style={{ margin: "5px" }}
+          />
+          {userNames.map((user) => (
+            <button
+              type="button"
+              className="btn btn-outline-dark"
+              aria-pressed="true"
+              key={user.id}
+              onClick={this.onUserClick}
+              style={{ margin: "2px" }}
+            >
+              {user.username}
+            </button>
+          ))}
+        </div>
       </div>
     );
   }

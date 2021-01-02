@@ -30,6 +30,7 @@ public class ReviewerController {
     @PostMapping("/addReview/{id}")
     @PreAuthorize("hasRole('REVIEWER')")
     public Paper addReview(@PathVariable("id") String paperID, @RequestBody ReviewRequest reviewRequest){
+
         Optional<Paper> paper = paperRepository.findById(paperID);
 
         Review newReview = new Review(reviewRequest.getReviewerId(), reviewRequest.getComment());
@@ -41,7 +42,7 @@ public class ReviewerController {
         reviews.add(newReview.getId());
 
         paper.get().setReviews(reviews);
-        paper.get().setAccepted(reviewRequest.getIsAccepted());
+        paper.get().setIsAccepted(reviewRequest.getIsAccepted());
 
         paperRepository.save(paper.get());
 

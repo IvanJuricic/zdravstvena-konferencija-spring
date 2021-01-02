@@ -25,12 +25,12 @@ public class Paper {
         this.reviews = reviews;
     }
 
-    public boolean isAccepted() {
+    public boolean getIsAccepted() {
         return isAccepted;
     }
 
-    public void setAccepted(boolean accepted) {
-        isAccepted = accepted;
+    public void setIsAccepted(boolean isAccepted) {
+        this.isAccepted = isAccepted;
     }
 
     public List<String> getReviews() {
