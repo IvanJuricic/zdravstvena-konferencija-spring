@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
-import Textarea from "react-validation/build/textarea";
-import Select from "react-validation/build/select";
+
+import SkyLight from "react-skylight";
+import ModalPaperData from "./modalPaperData";
 
 import AdminService from "../services/adminService";
 import PaperService from "../services/paperService";
+import UserService from "../services/userService";
 
 import { storage } from "../firebase";
 
@@ -18,17 +18,22 @@ export default class BoardUser extends Component {
       description: "",
       userSearch: "",
       paperSearch: "",
-      selectedUser: "",
+      selectedUser: null,
       selectedPaper: null,
+      paperToSee: { id: "", title: "", reviews: [], isAccepted: false },
       users: [],
       papers: [],
+      reviews: [],
+      reviewer: { id: "", username: "" },
     };
 
     this.onChange = this.onChange.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.onSelect = this.onSelect.bind(this);
-    this.onClick = this.onClick.bind(this);
+    this.onUserClick = this.onUserClick.bind(this);
     this.onPaperClick = this.onPaperClick.bind(this);
+    this.onAddPaperToUser = this.onAddPaperToUser.bind(this);
+    this.removeModalReviews = this.removeModalReviews.bind(this);
   }
 
   /* Predavanje rada */
@@ -54,34 +59,67 @@ export default class BoardUser extends Component {
     });
   }
 
-  /* Odabir rada kojeg želimo pridodati korisniku */
+  /* Odabir rada kojeg želimo pregledati */
   onSelect(e) {
+    const paper = this.state.papers.filter((paper) => {
+      return paper.title.search(e.target.innerText) >= 0;
+    });
+
     this.setState({
-      selectedPaper: e.target.innerText,
+      paperToSee: { ...paper[0] },
+    });
+
+    UserService.getPaperData(paper[0].id).then((res) => {
+      UserService.getPaperReviews(res.data.id).then((resp) => {
+        this.setState({
+          reviews: [...this.state.reviews, ...resp.data],
+        });
+        this.customDialog.show();
+      });
     });
   }
 
   /* Odabir korisnika kojem želimo pridodati rad */
-  onClick(e) {
+  onUserClick(e) {
     const user = this.state.users.filter((user) => {
-      return !user.username.search(e.target.innerText);
+      return user.username.search(e.target.innerText) >= 0;
     });
-
-    const userObj = { ...user };
-
-    AdminService.setAuthor(
-      userObj[0].id,
-      this.state.selectedPaper
-    ).then((res) => console.log("Rad dodan autoru", { res }));
+    e.target.classList.toggle("active");
+    this.setState({
+      selectedUser: { ...user[0] },
+    });
   }
 
+  /* Odabir rada kojeg želimo pridodati korisniku */
   onPaperClick(e) {
+    const paper = this.state.papers.filter((paper) => {
+      return paper.title.search(e.target.innerText) >= 0;
+    });
     e.target.classList.toggle("active");
-    console.log(e.target.classList);
+    console.log(paper);
+    this.setState({
+      selectedPaper: { ...paper[0] },
+    });
+  }
+
+  removeModalReviews(e) {
+    this.setState({
+      reviews: [],
+      reviewer: { id: "", username: "" },
+    });
   }
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
+  }
+
+  onAddPaperToUser(e) {
+    AdminService.setAuthor(
+      this.state.selectedUser.id,
+      this.state.selectedPaper.title
+    ).then((res) => {
+      console.log("Vrh");
+    });
   }
 
   componentDidMount() {
@@ -99,6 +137,16 @@ export default class BoardUser extends Component {
   }
 
   render() {
+    var myBigGreenDialog = {
+      backgroundColor: "#00897B",
+      color: "#ffffff",
+      width: "70%",
+      height: "650px",
+      marginTop: "-300px",
+      marginLeft: "-35%",
+      overflowX: "hidden",
+      padding: "20px",
+    };
     const userNames = this.state.users.filter((user) => {
       return (
         this.state.userSearch &&
@@ -139,46 +187,23 @@ export default class BoardUser extends Component {
               >
                 {paper.title}
               </button>
-
-              /*<div
-                class="col-sm-8"
-                style={{
-                  fontSize: "20px",
-                  cursor: "pointer",
-                  background: "#F8F8F8",
-                  border: "solid #BDBDBD 1px",
-                  boxShadow: "7px 7px 6px rgba(0, 0, 0, 0.1)",
-                  WebkitBoxShadow: "7px 7px 6px rgba(0, 0, 0, 0.1)",
-                  MozBoxShadow: "7px 7px 6px rgba(0, 0, 0, 0.1)",
-                }}
-                key={paper.id}
-                onClick={this.onSelect}
-              >
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">{paper.title}</h5>
-                  </div>
-                </div>
-              </div>*/
             ))}
           </div>
         </div>
+        <SkyLight
+          afterClose={this.removeModalReviews}
+          dialogStyles={myBigGreenDialog}
+          hideOnOverlayClicked
+          ref={(ref) => (this.customDialog = ref)}
+          title={this.state.paperToSee.title}
+        >
+          <ModalPaperData
+            paper={this.state.paperToSee}
+            reviews={this.state.reviews}
+          />
+        </SkyLight>
         <br />
-
-        {/*
-        <label>Objavite svoj rad:</label>
-        <Form>
-          <label>
-            Privitak
-            <Input
-              type="file"
-              className="form-control"
-              name="fileName"
-              onChange={this.handleSave}
-            />
-          </label>
-        </Form>*/}
-        <div class="custom-file">
+        <div className="custom-file">
           <input
             type="file"
             className="custom-file-input"
@@ -199,12 +224,12 @@ export default class BoardUser extends Component {
           Pronađi korisnika i pridodaj ga kao autora odabranog rada:
         </label>
 
-        <div class="form-row">
-          <div class="form-group col-md-6">
+        <div className="form-row">
+          <div className="form-group col-md-6">
             <label htmlFor="inputEmail4">Korisničko ime</label>
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               id="inputEmail4"
               placeholder=""
               name="userSearch"
@@ -216,21 +241,21 @@ export default class BoardUser extends Component {
             {userNames.map((user) => (
               <button
                 type="button"
-                class="btn btn-outline-dark"
+                className="btn btn-outline-dark"
                 aria-pressed="true"
                 key={user.id}
-                onClick={this.onClick}
+                onClick={this.onUserClick}
                 style={{ margin: "2px" }}
               >
                 {user.username}
               </button>
             ))}
           </div>
-          <div class="form-group col-md-6">
+          <div className="form-group col-md-6">
             <label htmlFor="inputPassword4">Znanstveni rad</label>
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               id="inputPassword4"
               name="paperSearch"
               value={this.state.paperSearch}
@@ -238,21 +263,29 @@ export default class BoardUser extends Component {
               onChange={this.onChange}
               style={{ margin: "5px" }}
             />
-            <div className="btn-group btn-group-toggle" data-toggle="buttons">
-              {paperNames.map((paper) => (
-                <label
-                  className="btn btn-outline-dark"
-                  key={paper.id}
-                  onClick={this.onPaperClick}
-                  style={{ margin: "2px" }}
-                >
-                  <input type="radio" name="options" autoComplete="off" />
-                  {paper.title}
-                </label>
-              ))}
-            </div>
+            {paperNames.map((paper) => (
+              <button
+                type="button"
+                className="btn btn-outline-dark"
+                aria-pressed="true"
+                key={paper.id}
+                onClick={this.onPaperClick}
+                style={{ margin: "2px" }}
+              >
+                {paper.title}
+              </button>
+            ))}
           </div>
+          <button
+            type="button"
+            className="btn btn-dark"
+            style={{ margin: "0 auto" }}
+            onClick={this.onAddPaperToUser}
+          >
+            Dodaj
+          </button>
         </div>
+
         <br />
       </div>
     );

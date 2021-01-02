@@ -98,10 +98,10 @@ export default class BoardChairman extends Component {
     this.setState({
       editUser: userObj[0],
     });
-    await this.customDialog.show();
-    /*ChairmanService.setUserRole(e.target.innerText).then((res) =>
+    //await this.customDialog.show();
+    ChairmanService.setUserRole(e.target.innerText).then((res) =>
       console.log({ res })
-    );*/
+    );
   }
 
   componentDidMount() {

@@ -81,6 +81,7 @@ class App extends Component {
                   </Link>
                 </li>
               )}
+              {console.log(this.state.showChairmanBoard)}
 
               {showReviewerBoard && (
                 <li className="nav-item">

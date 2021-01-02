@@ -5,15 +5,27 @@ import { connect } from "react-redux";
 import UserService from "../services/userService";
 
 class Profile extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      user: null,
+    };
+  }
+
+  /* TODO: prepraviti profilnu komponentu */
   componentDidMount() {
     const id = this.props.user.id;
 
-    UserService.getUserData(id).then((res) => console.log({ res }));
+    UserService.getUserData(id).then((res) =>
+      this.setState({
+        user: res.data,
+      })
+    );
   }
 
   render() {
     const { user: currentUser } = this.props;
-
     if (!currentUser) {
       return <Redirect to="/login" />;
     }

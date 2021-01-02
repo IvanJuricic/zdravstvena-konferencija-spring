@@ -1,5 +1,10 @@
 package com.zdrkonf.app.konf.request;
 
+import com.zdrkonf.app.konf.models.Review;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReviewRequest {
 
     private String reviewerId;

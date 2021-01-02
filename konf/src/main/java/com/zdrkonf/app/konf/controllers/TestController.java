@@ -1,16 +1,21 @@
 package com.zdrkonf.app.konf.controllers;
 
 import com.zdrkonf.app.konf.models.Paper;
+import com.zdrkonf.app.konf.models.Review;
 import com.zdrkonf.app.konf.models.User;
 import com.zdrkonf.app.konf.repositories.ConferenceRepository;
 import com.zdrkonf.app.konf.repositories.PaperRepository;
+import com.zdrkonf.app.konf.repositories.ReviewRepository;
 import com.zdrkonf.app.konf.repositories.UserRepository;
 import com.zdrkonf.app.konf.request.AuthorRequest;
+import com.zdrkonf.app.konf.request.ReviewRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -26,6 +31,9 @@ public class TestController {
 
     @Autowired
     PaperRepository paperRepository;
+
+    @Autowired
+    ReviewRepository reviewRepository;
 
     @GetMapping("/all")
     public ResponseEntity<?> allAccess(){
@@ -50,6 +58,22 @@ public class TestController {
 
         return userRepository.findById(id);
 
+    }
+
+    @GetMapping("/paper/{id}")
+    public Paper getPaperData(@PathVariable("id") String paperId){
+        return paperRepository.findById(paperId).get();
+    }
+
+    @GetMapping("/review/{id}")
+    public List<Review> getPaperReviews(@PathVariable("id") String paperId){
+
+        Paper paper = paperRepository.findById(paperId).get();
+
+        Iterable<String> reviews = paper.getReviews();
+        reviewRepository.findAllById(reviews);
+
+        return (List<Review>) reviewRepository.findAllById(reviews);
     }
 /*
     @PostMapping("/addAuthor")

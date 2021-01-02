@@ -109,7 +109,7 @@ export default class BoardAdmin extends Component {
                   className="form-control"
                   name="search"
                   value={this.state.search}
-                  autocomplete="off"
+                  autoComplete="off"
                   onChange={this.onChange}
                 />
               </label>

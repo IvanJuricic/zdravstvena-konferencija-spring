@@ -5,7 +5,6 @@ import { PDFViewer } from "react-view-pdf";
 import ReviewerService from "../services/reviewerService";
 
 function submitData(paperId, reviewerId, comment, isAccepted) {
-  console.log("Klik", isAccepted);
   ReviewerService.addReview(
     paperId,
     reviewerId,

@@ -19,6 +19,14 @@ class UserService {
   getUserData(id) {
     return axios.get(API_URL + `user/${id}`, { headers: authHeader() });
   }
+
+  getPaperData(id) {
+    return axios.get(API_URL + `paper/${id}`, { headers: authHeader() });
+  }
+
+  getPaperReviews(id) {
+    return axios.get(API_URL + `review/${id}`, { headers: authHeader() });
+  }
 }
 
 export default new UserService();
