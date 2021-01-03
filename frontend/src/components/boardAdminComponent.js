@@ -15,17 +15,17 @@ export default class BoardAdmin extends Component {
       title: "",
       description: "",
       search: "",
+      userSearch: "",
       selectedUser: "",
       users: [],
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.onClick = this.onClick.bind(this);
+    this.onUserClick = this.onUserClick.bind(this);
   }
 
-  onClick(e) {
-    console.log(e.target.innerText);
+  onUserClick(e) {
     AdminService.setUserRole(e.target.innerText).then((res) =>
       console.log({ res })
     );
@@ -43,7 +43,10 @@ export default class BoardAdmin extends Component {
     };
 
     try {
-      ConferenceService.submitConfDetails(data).then(() => e.target.reset());
+      ConferenceService.submitConfDetails(data).then(() => {
+        this.state.title = "";
+        this.state.description = "";
+      });
     } catch (err) {
       console.log("Greska pri slanju");
     }
@@ -59,78 +62,77 @@ export default class BoardAdmin extends Component {
 
   render() {
     const userNames = this.state.users.filter((user) => {
-      return this.state.search && user.username.indexOf(this.state.search) >= 0;
+      return (
+        this.state.userSearch &&
+        user.username.indexOf(this.state.userSearch) >= 0
+      );
     });
 
     return (
       <div className="container">
-        <header className="jumbotron">
-          <label>Podaci o novoj konferenciji:</label>
-          <Form onSubmit={this.onSubmit}>
-            <div className="form-group">
-              <label>
-                Naslov
-                <Input
-                  type="text"
-                  className="form-control"
-                  name="title"
-                  value={this.state.title}
-                  onChange={this.onChange}
-                />
-              </label>
-            </div>
-
-            <div className="form-group">
-              <label>
-                Opis konferencije
-                <Textarea
-                  type="text"
-                  className="form-control"
-                  name="description"
-                  value={this.state.description}
-                  onChange={this.onChange}
-                />
-              </label>
-            </div>
-
-            <div className="form-group">
-              <button className="btn btn-primary btn-block">Objavi</button>
-            </div>
-          </Form>
-          <br />
-          <br />
-          <Form>
-            <div className="form-group">
-              <label>
-                Pronađi korisnika i pridodaj ulogu predsjedavajućeg:
-                <Input
-                  placeholder="Pronađi korisnika"
-                  type="text"
-                  className="form-control"
-                  name="search"
-                  value={this.state.search}
-                  autoComplete="off"
-                  onChange={this.onChange}
-                />
-              </label>
-              {userNames.map((user) => (
-                <li key={user.id} onClick={this.onClick}>
-                  {user.username}
-                </li>
-              ))}
-            </div>
-
-            <div className="form-group">
-              <button className="btn btn-primary btn-block">Dodaj ulogu</button>
-            </div>
-          </Form>
-          <br />
-          <br />
-
-          <div>
-            <label>Trenutno ulogirani korisnici:</label>
+        <form>
+          <div className="form-group">
+            <label style={{ fontSize: "24px" }} htmlFor="confTitle">
+              Naslov konferencije
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="confTitle"
+              name="title"
+              value={this.state.title}
+              autoComplete="false"
+              onChange={this.onChange}
+            />
           </div>
-        </header>
+          <div className="form-group">
+            <label style={{ fontSize: "24px" }} htmlFor="confDesc">
+              Opis konferencije
+            </label>
+            <textarea
+              className="form-control"
+              id="confDesc"
+              rows="3"
+              name="description"
+              value={this.state.description}
+              onChange={this.onChange}
+            ></textarea>
+          </div>
+          <button className="btn btn-dark btn-block" onClick={this.onSubmit}>
+            Objavi
+          </button>
+        </form>
+        <br />
+        <br />
+        <p style={{ fontSize: "24px" }}>
+          Pretraži korisnike i pridodaj ulogu predsjedavajućeg
+        </p>
+        <div className="form-group col-md-4">
+          <label htmlFor="inputEmail4">Korisničko ime</label>
+          <input
+            type="text"
+            className="form-control"
+            id="inputEmail4"
+            placeholder=""
+            name="userSearch"
+            value={this.state.userSearch}
+            autoComplete="off"
+            onChange={this.onChange}
+            style={{ margin: "5px" }}
+          />
+          {userNames.map((user) => (
+            <button
+              type="button"
+              className="btn btn-outline-dark"
+              aria-pressed="true"
+              key={user.id}
+              onClick={this.onUserClick}
+              style={{ margin: "2px" }}
+            >
+              {user.username}
+            </button>
+          ))}
+        </div>
       </div>
     );
   }

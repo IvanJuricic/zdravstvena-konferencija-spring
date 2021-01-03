@@ -128,35 +128,50 @@ export default class BoardReviewer extends Component {
 
     return (
       <div className="container">
-        <header className="jumbotron">
-          <label>Popis predanih radova:</label>
-          {this.state.papers.map((paper) => (
-            <div
-              key={paper.id}
-              onClick={this.onSelect}
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                cursor: "pointer",
-              }}
-            >
-              <p style={{ fontSize: "24px" }}>{paper.title}</p>
-            </div>
-          ))}
-          <SkyLight
-            afterClose={this.removeModalUser}
-            dialogStyles={myBigGreenDialog}
-            hideOnOverlayClicked
-            ref={(ref) => (this.customDialog = ref)}
-            title={this.state.paperToReview.title}
+        <label style={{ fontSize: "25px", marginBottom: "10px" }}>
+          Odaberite rad kojem želite dati recenziju:
+        </label>
+        {this.state.papers.map((paper) => (
+          <div
+            key={paper.id}
+            onClick={this.onSelect}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              cursor: "pointer",
+            }}
           >
-            <ModalPaperPreview
-              paper={this.state.paperToReview}
-              reviewer={this.state.currentUser}
-            />
-          </SkyLight>
-        </header>
+            <button
+              className="btn btn-outline-dark"
+              style={{ fontSize: "20px", margin: "5px" }}
+            >
+              {paper.title}
+            </button>
+          </div>
+        ))}
+        <br />
+        <p style={{ fontSize: "24px" }}>
+          Ukupan broj predanih radova: {this.state.papers.length}
+        </p>
+        <button
+          className="btn btn-dark btn-block"
+          onClick={this.downloadPapers}
+        >
+          Preuzmi sve radove
+        </button>
+        <SkyLight
+          afterClose={this.removeModalUser}
+          dialogStyles={myBigGreenDialog}
+          hideOnOverlayClicked
+          ref={(ref) => (this.customDialog = ref)}
+          title={this.state.paperToReview.title}
+        >
+          <ModalPaperPreview
+            paper={this.state.paperToReview}
+            reviewer={this.state.currentUser}
+          />
+        </SkyLight>
       </div>
     );
   }

@@ -34,7 +34,7 @@ public class ChairmanController {
     PaperRepository paperRepository;
 
     @GetMapping("/getPapers")
-    @PreAuthorize("hasRole('CHAIRMAN') or hasRole('REVIEWER')")
+    @PreAuthorize("hasRole('CHAIRMAN') or hasRole('REVIEWER') or hasRole('ADMIN') or hasRole('USER')")
     public List<Paper> getPapersLength(){
 
         return paperRepository.findAll();
