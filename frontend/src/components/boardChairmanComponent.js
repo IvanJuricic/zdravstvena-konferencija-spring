@@ -33,7 +33,7 @@ export default class BoardChairman extends Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.downloadPapers = this.downloadPapers.bind(this);
 
-    this.setModalUser = this.setModalUser.bind(this);
+    //this.setModalUser = this.setModalUser.bind(this);
     this.removeModalUser = this.removeModalUser.bind(this);
     this.onUserSelect = this.onUserSelect.bind(this);
     this.onUserClick = this.onUserClick.bind(this);
@@ -107,9 +107,12 @@ export default class BoardChairman extends Component {
     this.setState({
       editUser: { id: "", username: "", email: "" },
     });
+    AdminService.getAllUsers().then((response) => {
+      this.setState({
+        users: response.data,
+      });
+    });
   }
-
-  setModalUser(username) {}
 
   componentDidMount() {
     AdminService.getAllUsers()
@@ -142,6 +145,8 @@ export default class BoardChairman extends Component {
       height: "600px",
       marginTop: "-300px",
       marginLeft: "-35%",
+
+      flexDirection: "column",
     };
 
     return (
