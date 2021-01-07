@@ -1,6 +1,7 @@
 package com.zdrkonf.app.konf.request;
 
 import com.zdrkonf.app.konf.models.Review;
+import com.zdrkonf.app.konf.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +12,24 @@ public class ReviewRequest {
 
     private String comment;
 
-    private boolean isAccepted;
+    private String status;
 
-    public boolean getIsAccepted() {
-        return isAccepted;
+    private List<User> users;
+
+    public String getStatus() {
+        return status;
     }
 
-    public void setAccepted(boolean isAccepted) {
-        this.isAccepted = isAccepted;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     public String getReviewerId() {

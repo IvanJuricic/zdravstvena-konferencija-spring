@@ -28,6 +28,9 @@ export default class BoardReviewer extends Component {
       users: [],
       currentUser: JSON.parse(localStorage.getItem("user")),
       papers: [],
+      acceptedPapers: [],
+      declinedPapers: [],
+      majorFixPapers: [],
       paperToReview: { id: "", title: "", url: "" },
     };
 
@@ -35,6 +38,7 @@ export default class BoardReviewer extends Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.downloadPapers = this.downloadPapers.bind(this);
     this.onSelect = this.onSelect.bind(this);
+    this.setCompState = this.setCompState.bind(this);
   }
 
   downloadPapers(e) {
@@ -69,6 +73,13 @@ export default class BoardReviewer extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  setCompState(e) {
+    ChairmanService.getPapers().then((res) => {
+      this.setState({
+        papers: res.data,
+      });
+    });
+  }
   async onSelect(e) {
     const paper = this.state.papers.filter((paper) => {
       return !paper.title.search(e.target.innerText);
@@ -126,31 +137,9 @@ export default class BoardReviewer extends Component {
       padding: "20px",
     };
 
+    console.log(this.state.papers);
     return (
       <div className="container">
-        <label style={{ fontSize: "25px", marginBottom: "10px" }}>
-          Odaberite rad kojem želite dati recenziju:
-        </label>
-        {this.state.papers.map((paper) => (
-          <div
-            key={paper.id}
-            onClick={this.onSelect}
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              cursor: "pointer",
-            }}
-          >
-            <button
-              className="btn btn-outline-dark"
-              style={{ fontSize: "20px", margin: "5px" }}
-            >
-              {paper.title}
-            </button>
-          </div>
-        ))}
-        <br />
         <p style={{ fontSize: "24px" }}>
           Ukupan broj predanih radova: {this.state.papers.length}
         </p>
@@ -160,8 +149,113 @@ export default class BoardReviewer extends Component {
         >
           Preuzmi sve radove
         </button>
+        <br />
+        <br />
+        <label style={{ fontSize: "25px", marginBottom: "10px" }}>
+          Popis nerecenziranih radova:
+        </label>
+        {this.state.papers.map((paper) =>
+          paper.status === "No review" ? (
+            <div
+              key={paper.id}
+              onClick={this.onSelect}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
+            >
+              <button
+                className="btn btn-outline-dark"
+                style={{ fontSize: "20px", margin: "5px" }}
+              >
+                {paper.title}
+              </button>
+            </div>
+          ) : null
+        )}
+        <br />
+        <label
+          style={{ fontSize: "25px", marginBottom: "10px", marginTop: "10px" }}
+        >
+          Popis potvrđenih radova:
+        </label>
+        {this.state.papers.map((paper) =>
+          paper.status === "accept" || paper.status === "acceptMinorChanges" ? (
+            <div
+              key={paper.id}
+              //onClick={this.onSelect}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <button
+                className="btn btn-success disabled"
+                style={{ fontSize: "20px", margin: "5px", cursor: "revert" }}
+              >
+                {paper.title}
+              </button>
+            </div>
+          ) : null
+        )}
+        <br />
+        <label
+          style={{ fontSize: "25px", marginBottom: "10px", marginTop: "10px" }}
+        >
+          Popis radova koje treba opet provjeriti:
+        </label>
+        {this.state.papers.map((paper) =>
+          paper.status === "pending" ? (
+            <div
+              key={paper.id}
+              onClick={this.onSelect}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
+            >
+              <button
+                className="btn btn-warning"
+                style={{ fontSize: "20px", margin: "5px" }}
+              >
+                {paper.title}
+              </button>
+            </div>
+          ) : null
+        )}
+        <br />
+        <label
+          style={{ fontSize: "25px", marginBottom: "10px", marginTop: "10px" }}
+        >
+          Popis odbijenih radova:
+        </label>
+        {this.state.papers.map((paper) =>
+          paper.status === "decline" ? (
+            <div
+              key={paper.id}
+              //onClick={this.onSelect}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <button
+                className="btn btn-danger disabled"
+                style={{ fontSize: "20px", margin: "5px", cursor: "revert" }}
+              >
+                {paper.title}
+              </button>
+            </div>
+          ) : null
+        )}
         <SkyLight
-          afterClose={this.removeModalUser}
+          afterClose={this.setCompState}
           dialogStyles={myBigGreenDialog}
           hideOnOverlayClicked
           ref={(ref) => (this.customDialog = ref)}
@@ -170,6 +264,7 @@ export default class BoardReviewer extends Component {
           <ModalPaperPreview
             paper={this.state.paperToReview}
             reviewer={this.state.currentUser}
+            users={this.state.users}
           />
         </SkyLight>
       </div>

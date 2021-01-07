@@ -4,11 +4,10 @@ import authHeader from "./auth-header";
 const API_URL = "http://localhost:8080/api/review/";
 
 class ReviewerService {
-  addReview(paperId, reviewerId, comment, isAccepted) {
-    console.log("ide u axios", isAccepted);
+  addReview(paper, reviewerId, users, comment, status) {
     return axios.post(
-      API_URL + `addReview/${paperId}`,
-      { reviewerId, comment, isAccepted },
+      API_URL + `addReview/${paper.id}`,
+      { reviewerId, users, comment, status },
       { headers: authHeader() }
     );
   }

@@ -36,7 +36,7 @@ public class PaperController {
 
         List<String> reviewList = new ArrayList<>();
 
-        Paper newPaper = new Paper(paperRequest.getPaperName(), paperRequest.getPaperURL(), reviewList);
+        Paper newPaper = new Paper(paperRequest.getPaperName(), paperRequest.getPaperURL(), reviewList, "No review");
 
         paperRepository.save(newPaper);
 

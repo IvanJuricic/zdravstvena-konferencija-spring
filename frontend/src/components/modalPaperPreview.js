@@ -1,21 +1,19 @@
 import React, { useState, StyleSheet } from "react";
 import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
 import { PDFViewer } from "react-view-pdf";
 import ReviewerService from "../services/reviewerService";
 
-function submitData(paperId, reviewerId, comment, isAccepted) {
-  ReviewerService.addReview(
-    paperId,
-    reviewerId,
-    comment,
-    isAccepted
-  ).then((res) => console.log("Proslo", res));
+function submitData(paper, reviewerId, users, comment, status) {
+  ReviewerService.addReview(paper, reviewerId, users, comment, status).then(
+    (res) => {
+      console.log("Tu smo", res.data);
+    }
+  );
 }
 
 export default function ModalPaperPreview(props) {
   const [comment, setComment] = useState("");
-  const [isAccepted, setIsAccepted] = useState(false);
+  const [status, setStatus] = useState("accept");
 
   return (
     <div>
@@ -56,38 +54,33 @@ export default function ModalPaperPreview(props) {
                 setComment(e.target.value);
               }}
             />
-            <div
-              style={{
-                display: "flex",
-                margin: "0 auto",
-                padding: "5px",
-                alignItems: "center",
-                fontSize: "20px",
+            <select
+              style={{ padding: "5px" }}
+              className="custom-select"
+              onChange={(e) => {
+                setStatus(e.target.value);
               }}
             >
-              <input
-                type="checkbox"
-                className="form-check-input"
-                id="approved"
-                value={isAccepted}
-                onChange={(e) => {
-                  setIsAccepted(e.target.checked);
-                }}
-              />
-              <label className="form-check-label" htmlFor="approved">
-                Potvrditi rad?
-              </label>
-            </div>
+              <option value="accept">Prihvati</option>
+              <option value="acceptMinorChanges">
+                Prihvati(manje izmjene)
+              </option>
+              <option value="pending">Prihvati(veće promjene)</option>
+              <option value="decline">Odbij</option>
+            </select>
             <button
               className="btn btn-success"
               style={{ marginTop: "10px" }}
               type="button"
               onClick={() => {
+                setComment("");
+                setStatus("accept");
                 submitData(
-                  props.paper.id,
+                  props.paper,
                   props.reviewer.id,
+                  props.users,
                   comment,
-                  isAccepted
+                  status
                 );
               }}
             >

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Router, Switch, Route, Link } from "react-router-dom";
 
+import "popper.js/dist/popper.min";
+import "popper.js/dist/popper.min.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 

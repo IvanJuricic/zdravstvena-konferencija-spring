@@ -17,20 +17,21 @@ public class Paper {
 
     private List<String> reviews;
 
-    private boolean isAccepted;
+    private String status;
 
-    public Paper(String paperName, String paperURL, List<String> reviews) {
+    public Paper(String paperName, String paperURL, List<String> reviews, String status) {
         this.paperName = paperName;
         this.paperURL = paperURL;
         this.reviews = reviews;
+        this.status = status;
     }
 
-    public boolean getIsAccepted() {
-        return isAccepted;
+    public String getStatus() {
+        return status;
     }
 
-    public void setIsAccepted(boolean isAccepted) {
-        this.isAccepted = isAccepted;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public List<String> getReviews() {
