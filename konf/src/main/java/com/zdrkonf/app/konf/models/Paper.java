@@ -19,6 +19,8 @@ public class Paper {
 
     private String status;
 
+    private String section;
+
     public Paper(String paperName, String paperURL, List<String> reviews, String status) {
         this.paperName = paperName;
         this.paperURL = paperURL;
@@ -32,6 +34,14 @@ public class Paper {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
     }
 
     public List<String> getReviews() {

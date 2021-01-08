@@ -66,6 +66,7 @@ public class ReviewerController {
 
         }
 
+        /*
         if(reviewRequest.getStatus().contains("accept")){
             emailController.sendReviewAcceptanceEmail(emailList);
         } else if(reviewRequest.getStatus().contains("acceptMinorChanges")) {
@@ -74,7 +75,7 @@ public class ReviewerController {
             emailController.sendReviewPendingEmail(emailList);
         } else if(reviewRequest.getStatus().contains("decline"))
             emailController.sendReviewDeclineEmail(emailList);
-
+*/
         return emailList;
     }
 

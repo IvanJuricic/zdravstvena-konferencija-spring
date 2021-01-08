@@ -50,11 +50,17 @@ export default class BoardUser extends Component {
           })*/
     fileRef.put(file).then(() => {
       fileRef.getDownloadURL().then((res) => {
-        PaperService.uploadPaper(res, fileName, user.id).then((response) => {
-          this.setState({
-            papers: [...this.state.papers, response.data],
+        PaperService.uploadPaper(res, fileName, user.id)
+          .then((response) => {
+            response.data.message === "New Paper Added"
+              ? this.setState({
+                  papers: [...this.state.papers, response.data],
+                })
+              : console.log("Updatean rad");
+          })
+          .catch(() => {
+            console.log("Greska");
           });
-        });
       });
     });
   }
@@ -176,17 +182,50 @@ export default class BoardUser extends Component {
               flexWrap: "wrap",
             }}
           >
-            {this.state.papers.map((paper) => (
-              <button
-                type="button"
-                style={{ display: "flex", flexGrow: "1", margin: "5px" }}
-                className="btn btn-outline-dark btn-lg"
-                key={paper.id}
-                onClick={this.onSelect}
-              >
-                {paper.title}
-              </button>
-            ))}
+            {this.state.papers.map((paper) =>
+              paper.status === "accept" ||
+              paper.status === "acceptMinorChanges" ? (
+                <button
+                  type="button"
+                  style={{ flexGrow: "1", margin: "5px" }}
+                  className="btn btn-success btn-lg"
+                  key={paper.id}
+                  onClick={this.onSelect}
+                >
+                  {paper.title}
+                </button>
+              ) : paper.status === "decline" ? (
+                <button
+                  type="button"
+                  style={{ flexGrow: "1", margin: "5px" }}
+                  className="btn btn-danger btn-lg"
+                  key={paper.id}
+                  onClick={this.onSelect}
+                >
+                  {paper.title}
+                </button>
+              ) : paper.status === "pending" ? (
+                <button
+                  type="button"
+                  style={{ flexGrow: "1", margin: "5px" }}
+                  className="btn btn-outline-warning btn-lg"
+                  key={paper.id}
+                  onClick={this.onSelect}
+                >
+                  {paper.title}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  style={{ flexGrow: "1", margin: "5px" }}
+                  className="btn btn-outline-dark btn-lg"
+                  key={paper.id}
+                  onClick={this.onSelect}
+                >
+                  {paper.title}
+                </button>
+              )
+            )}
           </div>
         </div>
         <SkyLight

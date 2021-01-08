@@ -8,7 +8,9 @@ import com.zdrkonf.app.konf.repositories.PaperRepository;
 import com.zdrkonf.app.konf.repositories.UserRepository;
 import com.zdrkonf.app.konf.request.EmailRequest;
 import com.zdrkonf.app.konf.request.PaperRequest;
+import com.zdrkonf.app.konf.response.PaperResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,26 +34,30 @@ public class PaperController {
     UserRepository userRepository;
 
     @PostMapping("/upload/{id}")
-    public Paper uploadPaper(@RequestBody PaperRequest paperRequest, @PathVariable("id") String userId){
+    public ResponseEntity uploadPaper(@RequestBody PaperRequest paperRequest, @PathVariable("id") String userId){
 
         List<String> reviewList = new ArrayList<>();
 
         Paper newPaper = new Paper(paperRequest.getPaperName(), paperRequest.getPaperURL(), reviewList, "No review");
 
-        paperRepository.save(newPaper);
+        Paper paper = paperRepository.findBypaperName(paperRequest.getPaperName());
 
-        Optional<User> user = userRepository.findById(userId);
-
-        try{
-            user.get().getPapers().add(newPaper.getId());
-        } catch (Exception e){
-            return newPaper;
+        if(paper == null){
+            paperRepository.save(newPaper);
+            Optional<User> user = userRepository.findById(userId);
+            try{
+                user.get().getPapers().add(newPaper.getId());
+            } catch (Exception e){
+                return ResponseEntity.ok(new PaperResponse(newPaper, "Something Went Wrong"));
+            }
+            userRepository.save(user.get());
+            return ResponseEntity.ok(new PaperResponse(newPaper, "New Paper Added"));
+        } else {
+            paper.setUrl(paperRequest.getPaperURL());
+            paper.setTitle(paperRequest.getPaperName());
+            paperRepository.save(paper);
+            return ResponseEntity.ok(new PaperResponse(paper, "Paper Updated"));
         }
-
-        userRepository.save(user.get());
-
-        return newPaper;
-
     }
 
     @PostMapping("/email")

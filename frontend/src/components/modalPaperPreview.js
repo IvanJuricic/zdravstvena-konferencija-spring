@@ -65,7 +65,7 @@ export default function ModalPaperPreview(props) {
               <option value="acceptMinorChanges">
                 Prihvati(manje izmjene)
               </option>
-              <option value="pending">Prihvati(veće promjene)</option>
+              <option value="pending">Potrebne veće promjene</option>
               <option value="decline">Odbij</option>
             </select>
             <button

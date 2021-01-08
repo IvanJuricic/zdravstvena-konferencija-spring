@@ -22,11 +22,20 @@ export default function ModalPaperData(props) {
         </div>
       ))}
       <h1 style={{ textAlign: "center" }}>
-        {props.paper.isAccepted ? (
+        {props.paper.status === "accept" ||
+        props.paper.status === "acceptMinorChanges" ? (
           <span className="badge badge-pill badge-success">Prihvaćeno</span>
-        ) : (
+        ) : null}
+        {props.paper.status === "decline" ? (
           <span className="badge badge-pill badge-danger">Odbijeno</span>
-        )}
+        ) : null}
+        {props.paper.status === "pending" ? (
+          <span className="badge badge-pill badge-warning">
+            Potrebne izmjene
+          </span>
+        ) : props.paper.status === "No review" ? (
+          <span className="badge badge-pill badge-info">Nema recenzije</span>
+        ) : null}
       </h1>
     </div>
   );
