@@ -43,8 +43,16 @@ class Profile extends Component {
           {currentUser.id}
         </h5>
         <h5>
+          <strong style={{ marginRight: "10px" }}>Sekcija korisnika:</strong>{" "}
+          {currentUser.section}
+        </h5>
+        <h5>
           <strong style={{ marginRight: "10px" }}>Email:</strong>{" "}
           {currentUser.email}
+        </h5>
+        <h5>
+          <strong style={{ marginRight: "10px" }}>Institut korisnika:</strong>{" "}
+          {currentUser.institute}
         </h5>
         <h5>
           <strong>Korisničke role:</strong>
