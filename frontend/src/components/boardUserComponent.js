@@ -38,6 +38,7 @@ export default class BoardUser extends Component {
 
   /* Predavanje rada */
   handleSave(e) {
+    console.log("Radovi ====> ", this.state.papers);
     const file = e.target.files[0];
     const user = JSON.parse(localStorage.getItem("user"));
     const fileName = file.name;
@@ -52,9 +53,9 @@ export default class BoardUser extends Component {
       fileRef.getDownloadURL().then((res) => {
         PaperService.uploadPaper(res, fileName, user.id)
           .then((response) => {
-            response.data.message === "New Paper Added"
+            response.data.message === "Dodan novi rad"
               ? this.setState({
-                  papers: [...this.state.papers, response.data],
+                  papers: [...this.state.papers, response.data.paper],
                 })
               : console.log("Updatean rad");
           })

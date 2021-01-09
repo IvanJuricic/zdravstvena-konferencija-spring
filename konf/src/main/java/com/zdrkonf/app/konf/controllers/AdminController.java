@@ -47,7 +47,7 @@ public class AdminController {
     public void addConferenceDetails(@RequestBody ConferenceDetailsRequest conferenceDetailsRequest){
 
         Conference newConference = new Conference(conferenceDetailsRequest.getTitle(),
-                conferenceDetailsRequest.getDescription());
+                conferenceDetailsRequest.getDescription(), conferenceDetailsRequest.getSection());
 
         conferenceRepository.save(newConference);
     }

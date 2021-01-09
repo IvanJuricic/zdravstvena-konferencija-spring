@@ -33,12 +33,8 @@ export default class Home extends Component {
       )
       .then(() => {
         ChairmanService.getPapers().then((res) => {
-          res.data.map((paper) => {
-            if (paper.isAccepted) {
-              this.setState({
-                papers: paper,
-              });
-            }
+          this.setState({
+            papers: [...this.state.papers, ...res.data],
           });
         });
       });
@@ -54,6 +50,7 @@ export default class Home extends Component {
             title={item.title}
             description={item.description}
             papers={this.state.papers}
+            section={item.section}
           />
         ))}
       </div>

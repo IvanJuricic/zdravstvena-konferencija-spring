@@ -18,6 +18,16 @@ public class Conference {
     @NotBlank
     private String description;
 
+    private String section;
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
+    }
+
     public String getId() {
         return id;
     }
@@ -42,8 +52,9 @@ public class Conference {
         this.description = description;
     }
 
-    public Conference(@NotBlank String title, @NotBlank String description) {
+    public Conference(@NotBlank String title, @NotBlank String description, String section) {
         this.title = title;
         this.description = description;
+        this.section = section;
     }
 }

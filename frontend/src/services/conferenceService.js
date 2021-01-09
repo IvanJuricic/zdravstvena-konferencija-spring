@@ -4,9 +4,13 @@ import authHeader from "./auth-header";
 const API_URL = "http://localhost:8080/api/admin/";
 
 class ConferenceService {
-  submitConfDetails({ title, description }) {
+  submitConfDetails({ title, description, section }) {
     return axios
-      .post(API_URL + "conf", { title, description }, { headers: authHeader() })
+      .post(
+        API_URL + "conf",
+        { title, description, section },
+        { headers: authHeader() }
+      )
       .then((res) => console.log({ res }));
   }
 }

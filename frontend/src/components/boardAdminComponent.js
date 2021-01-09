@@ -18,11 +18,13 @@ export default class BoardAdmin extends Component {
       userSearch: "",
       selectedUser: "",
       users: [],
+      section: "chem",
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onUserClick = this.onUserClick.bind(this);
+    this.onClick = this.onClick.bind(this);
   }
 
   onUserClick(e) {
@@ -40,6 +42,7 @@ export default class BoardAdmin extends Component {
     const data = {
       title: this.state.title,
       description: this.state.description,
+      section: this.state.section,
     };
 
     try {
@@ -60,6 +63,12 @@ export default class BoardAdmin extends Component {
     });
   }
 
+  onClick(e) {
+    this.setState({
+      section: e.target.value,
+    });
+  }
+
   render() {
     const userNames = this.state.users.filter((user) => {
       return (
@@ -71,19 +80,41 @@ export default class BoardAdmin extends Component {
     return (
       <div className="container">
         <form>
-          <div className="form-group">
-            <label style={{ fontSize: "24px" }} htmlFor="confTitle">
-              Naslov konferencije
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="confTitle"
-              name="title"
-              value={this.state.title}
-              autoComplete="false"
-              onChange={this.onChange}
-            />
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <div
+              className="form-group"
+              style={{ flex: "0.6", marginRight: "20px" }}
+            >
+              <label style={{ fontSize: "24px" }} htmlFor="confTitle">
+                Naslov konferencije
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="confTitle"
+                name="title"
+                value={this.state.title}
+                autoComplete="false"
+                onChange={this.onChange}
+              />
+            </div>
+            <div style={{ flex: "0.6", marginLeft: "20px" }}>
+              <label style={{ fontSize: "24px" }} htmlFor="confTitle">
+                Odabir tematike konferencije
+              </label>
+              <select
+                style={{ padding: "5px" }}
+                className="custom-select"
+                onChange={this.onClick}
+              >
+                <option value="Kemija">Kemija</option>
+                <option value="Matematika">Matematika</option>
+                <option value="Fizika">Fizika</option>
+                <option value="Informatika">Informatika</option>
+                <option value="Medicina">Medicina</option>
+                <option value="Elektrotehnika">Elektrotehnika</option>
+              </select>
+            </div>
           </div>
           <div className="form-group">
             <label style={{ fontSize: "24px" }} htmlFor="confDesc">

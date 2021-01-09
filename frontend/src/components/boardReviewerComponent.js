@@ -136,8 +136,6 @@ export default class BoardReviewer extends Component {
       overflowX: "hidden",
       padding: "20px",
     };
-
-    console.log(this.state.papers);
     return (
       <div className="container">
         <p style={{ fontSize: "24px" }}>

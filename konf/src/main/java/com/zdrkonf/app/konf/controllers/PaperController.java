@@ -42,21 +42,23 @@ public class PaperController {
 
         Paper paper = paperRepository.findBypaperName(paperRequest.getPaperName());
 
+        Optional<User> user = userRepository.findById(userId);
+        newPaper.setSection(user.get().getSection());
+
         if(paper == null){
             paperRepository.save(newPaper);
-            Optional<User> user = userRepository.findById(userId);
             try{
                 user.get().getPapers().add(newPaper.getId());
             } catch (Exception e){
                 return ResponseEntity.ok(new PaperResponse(newPaper, "Something Went Wrong"));
             }
             userRepository.save(user.get());
-            return ResponseEntity.ok(new PaperResponse(newPaper, "New Paper Added"));
+            return ResponseEntity.ok(new PaperResponse(newPaper, "Dodan novi rad"));
         } else {
             paper.setUrl(paperRequest.getPaperURL());
             paper.setTitle(paperRequest.getPaperName());
             paperRepository.save(paper);
-            return ResponseEntity.ok(new PaperResponse(paper, "Paper Updated"));
+            return ResponseEntity.ok(new PaperResponse(paper, "Rad ažuriran!"));
         }
     }
 
