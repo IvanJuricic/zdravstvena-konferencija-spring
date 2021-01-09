@@ -39,7 +39,7 @@ public class EmailController {
 
         String verifyURL = siteURL + "/api/auth/verify/" + verificationToken;
 
-        stringBuilder.append("<h3><a =\"href=" + verifyURL + "\">Registriraj me</a></h3>");
+        stringBuilder.append(verifyURL + "\n");
         stringBuilder.append("Hvala Vam i vidimo se!\n");
         stringBuilder.append("Lp, zdravstvena konferencija!");
 
