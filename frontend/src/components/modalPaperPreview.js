@@ -4,11 +4,7 @@ import { PDFViewer } from "react-view-pdf";
 import ReviewerService from "../services/reviewerService";
 
 function submitData(paper, reviewerId, users, comment, status) {
-  ReviewerService.addReview(paper, reviewerId, users, comment, status).then(
-    (res) => {
-      console.log("Tu smo", res.data);
-    }
-  );
+  ReviewerService.addReview(paper, reviewerId, users, comment, status);
 }
 
 export default function ModalPaperPreview(props) {

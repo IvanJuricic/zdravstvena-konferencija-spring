@@ -33,8 +33,13 @@ export default class Home extends Component {
       )
       .then(() => {
         ChairmanService.getPapers().then((res) => {
+          const acceptedPapers = res.data.filter((paper) => {
+            return (
+              paper.status === "accept" || paper.status === "acceptMinorChanges"
+            );
+          });
           this.setState({
-            papers: [...this.state.papers, ...res.data],
+            papers: [...this.state.papers, ...acceptedPapers],
           });
         });
       });

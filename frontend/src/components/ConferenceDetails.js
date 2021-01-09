@@ -73,7 +73,7 @@ export default class conferenceDetails extends Component {
             dialogStyles={myBigGreenDialog}
             hideOnOverlayClicked
             ref={(ref) => (this.customDialog = ref)}
-            title={this.state.paperToSee.title}
+            title={`Radovi u kategoriji ${this.props.section}`}
           >
             <ConferencePapers papers={papersToSend} />
           </SkyLight>
